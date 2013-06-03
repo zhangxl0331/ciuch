@@ -18,9 +18,14 @@ class MY_Parser extends CI_Parser {
 	{
 		$this->_ci = & get_instance();
 		
-		if ( ! class_exists('Lex_Autoloader'))
+		if ( ! class_exists('Lex\Parser'))
 		{
-			include APPPATH.'/libraries/Lex/Autoloader.php';
+			include APPPATH.'third_party/Lex/Parser.php';
+		}
+		
+		if ( ! class_exists('Lex\ParsingException'))
+		{
+			include APPPATH.'third_party/Lex/ParsingException.php';
 		}
 	}
 
@@ -88,11 +93,9 @@ class MY_Parser extends CI_Parser {
 
 		$data = array_merge($data, $this->_ci->load->_ci_cached_vars);
 
-		Lex_Autoloader::register();
-
-		$parser = new Lex_Parser();
-		$parser->scope_glue(':');
-		$parser->cumulative_noparse(TRUE);
+		$parser = new Lex\Parser();
+		$parser->scopeGlue(':');
+		$parser->cumulativeNoparse(TRUE);
 		$parsed = $parser->parse($string, $data, array($this, 'parser_callback'));
 		
 		// Finish benchmark
@@ -132,8 +135,8 @@ class MY_Parser extends CI_Parser {
 			// $content = $data['content']; # TODO What was this doing other than throw warnings in 2.0?
 			$parsed_return = '';
 
-			$parser = new Lex_Parser();
-			$parser->scope_glue(':');
+			$parser = new Lex\Parser();
+			$parser->scopeGlue(':');
 			
 			foreach ($return_data as $result)
 			{
