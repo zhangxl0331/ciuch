@@ -119,6 +119,8 @@ class Member extends MX_Controller {
 		$membername = ! get_cookie('loginuser')?'':get_cookie('loginuser');
 		$cookiecheck = ' checked';
 		
+		$this->load->vars(array('membername'=>'', 'password'=>'', 'cookiecheck'=>true, 'refer'=>''));
+		
 		$this->template
 		->set('nosidebar', 1)
 		->build('login');
@@ -136,36 +138,36 @@ class Member extends MX_Controller {
 		->build('register');	
 	}
 	
-	public function _remap($ac, $params = array())
-	{
-		$this->load->library('config/config_l');
-		if($ac == $this->config_l->login_action) 
-		{
-			$ac = 'login';
-		} 
+// 	public function _remap($ac, $params = array())
+// 	{
+// 		$this->load->library('config/config_l');
+// 		if($ac == $this->config_l->login_action) 
+// 		{
+// 			$ac = 'login';
+// 		} 
 // 		elseif($ac == 'login') 
 // 		{
 // 			$ac = '';
 // 		}
-		if($ac == $this->config_l->register_action) 
-		{
-			$ac = 'register';
-		} 
+// 		if($ac == $this->config_l->register_action) 
+// 		{
+// 			$ac = 'register';
+// 		} 
 // 		elseif($ac == 'register') 
 // 		{
 // 			$ac = '';
 // 		}
 		
-		if(empty($ac) || !in_array($ac, array('login', 'register'))) 
-		{
-			show_404();
-		}
+// 		if(empty($ac) || !in_array($ac, array('login', 'register'))) 
+// 		{
+// 			show_404();
+// 		}
 		
-		if (is_callable(array($this, $ac)))
-		{
-			call_user_func(array($this, $ac), $params);
-		}
-	}
+// 		if (is_callable(array($this, $ac)))
+// 		{
+// 			call_user_func(array($this, $ac), $params);
+// 		}
+// 	}
 	
 }
 
