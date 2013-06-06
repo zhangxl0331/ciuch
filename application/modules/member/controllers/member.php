@@ -5,6 +5,7 @@ class Member extends MX_Controller {
 	function __construct()
 	{
 		parent::__construct();
+		$this->load->helper('uch');
 	}
 
 	public function login()
@@ -18,12 +19,12 @@ class Member extends MX_Controller {
 				array(
 						'field'   => 'loginsubmit',
 						'label'   => 'loginsubmit',
-						'rules'   => 'required|trim'
+						'rules'   => 'required'
 				),
 				array(
 						'field'   => 'formhash',
 						'label'   => 'formhash',
-						'rules'   => 'callback__valid_formhash'
+						'rules'   => 'callback__valid_formhash['.formhash($uid=0, $key='', $hash='').']'
 				),
 				array(
 						'field' => 'username',
@@ -124,6 +125,11 @@ class Member extends MX_Controller {
 		$this->template
 		->set('nosidebar', 1)
 		->build('login');
+	}
+	
+	function _valid_formhash($input)
+	{
+		exit($input);return FALSE;
 	}
 	
 	/**

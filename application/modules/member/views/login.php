@@ -20,7 +20,7 @@
 		<a href="do.php?ac=lostpasswd">忘记密码?</a>
 	</td></tr>
 </table>
-<?=form_hidden('formhash', $formhash);?></form>
+<?=form_hidden('formhash', 111);?></form>
 
 <script type="text/javascript">
 	var lastSecCode = '';
