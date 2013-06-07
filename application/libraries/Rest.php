@@ -52,12 +52,12 @@ class REST
 
 		/* Not using Sparks? You bloody well should be.
 		| If you are going to be a stick in the mud then do it the old fashioned way
-		
-		$this->_ci->load->library('curl');
 		*/
+        
+		$this->_ci->load->library('curl');		
 		
 		// Load the cURL spark which this is dependant on
-		$this->_ci->load->spark('curl/1.2.1');
+		//$this->_ci->load->spark('curl/1.2.1');
 
 		// If a URL was passed to the library
 		empty($config) OR $this->initialize($config);

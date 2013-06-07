@@ -16,9 +16,9 @@ class Member extends MX_Controller {
 		$cookietime = intval($this->input->get_post('cookietime'));
 		
 		$this->load->library('form_validation');
-		$this->form_validation->set_rules('loginsubmit', '', 'required');
+		$this->form_validation->set_rules('loginsubmit', lang('loginsubmit'), 'required');
 		$this->form_validation->set_rules('formhash', lang('formhash'), 'callback_cksubmit['.formhash(0, '1', '').']');
-		$this->form_validation->set_rules('username', lang('username'), 'required');
+		$this->form_validation->set_rules('username', lang('username'), 'required|trim|callback_cklogin');
 		$this->form_validation->set_rules('password', lang('password'), 'required');		
 		if ($this->form_validation->run())
 		{
@@ -106,7 +106,7 @@ class Member extends MX_Controller {
 		->build('login');
 	}
 	
-	function _valid_formhash($input)
+	function cklogin($username)
 	{
 		exit($input);return FALSE;
 	}
