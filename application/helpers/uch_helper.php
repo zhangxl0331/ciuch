@@ -7,7 +7,7 @@ function cksubmit($input, $value='') {
 	if($_SERVER['REQUEST_METHOD'] == 'POST') {
 		if((empty($_SERVER['HTTP_REFERER']) || preg_replace("/https?:\/\/([^\:\/]+).*/i", "\\1", $_SERVER['HTTP_REFERER']) == preg_replace("/([^\:]+).*/", "\\1", $_SERVER['HTTP_HOST'])) && (empty($value) || $input == $value)) {
 			return true;
-		} else {
+		} else {return false;
 			showmessage('submit_invalid');
 		}
 	} else {

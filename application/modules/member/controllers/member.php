@@ -6,7 +6,7 @@ class Member extends MX_Controller {
 	{
 		parent::__construct();
 		$this->load->helper('uch');
-		$this->load->language('member/member');
+		$this->load->language(array('cp', 'member/member'));
 	}
 
 	public function login()
@@ -16,32 +16,10 @@ class Member extends MX_Controller {
 		$cookietime = intval($this->input->get_post('cookietime'));
 		
 		$this->load->library('form_validation');
-		$validation = array(
-				array(
-						'field'   => 'loginsubmit',
-						'label'   => 'loginsubmit',
-						'rules'   => 'required'
-				),
-				array(
-						'field'   => 'formhash',
-						'label'   => 'formhash',
-						'rules'   => 'callback_cksubmit['.formhash(0, '1', '').']'
-				),
-				array(
-						'field' => 'username',
-						'label' => 'username',
-						'rules' => 'required|trim'
-				),
-				array(
-						'field' => 'password',
-						'label' => 'password',
-						'rules' => 'required'
-				),
-		);
-			
-		// Set the validation rules
-		$this->form_validation->set_rules($validation);
-		
+		$this->form_validation->set_rules('loginsubmit', '', 'required');
+		$this->form_validation->set_rules('formhash', lang('formhash'), 'callback_cksubmit['.formhash(0, '1', '').']');
+		$this->form_validation->set_rules('username', lang('username'), 'required');
+		$this->form_validation->set_rules('password', lang('password'), 'required');		
 		if ($this->form_validation->run())
 		{
 			$this->load->library('uc/user_l', '', 'uc_user_l');

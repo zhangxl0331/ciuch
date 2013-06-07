@@ -1,3 +1,8 @@
+<?php if (validation_errors()): ?>
+<div class="error-box">
+	<?php echo validation_errors();?>
+</div>
+<?php endif; ?>
 <?=form_open('member/login', array('id'=>'loginform', 'name'=>'loginform', 'class'=>'c_form'));?>
 <table cellpadding="0" cellspacing="0" class="formtable">
 	<caption>
@@ -16,7 +21,7 @@
 	</tbody>
 	<tr><th width="100">&nbsp;</th><td>
 		<?=form_hidden('refer', $refer);?>
-		<?=form_submit(array('id'=>'loginsubmit', 'name'=>'loginsubmit', 'value'=>'登录', 'class'=>'submit', 'tabindex'=>5));?>
+		<?=form_submit(array('id'=>'loginsubmit', 'name'=>'loginsubmit', 'value'=>lang('login'), 'class'=>'submit', 'tabindex'=>5));?>
 		<a href="do.php?ac=lostpasswd"><?=lang('lost_passwd')?></a>
 	</td></tr>
 </table>
