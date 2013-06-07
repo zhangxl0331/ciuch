@@ -17,11 +17,12 @@ class Member extends MX_Controller {
 		
 		$this->load->library('form_validation');
 		$this->form_validation->set_rules('loginsubmit', lang('loginsubmit'), 'required');
-		$this->form_validation->set_rules('formhash', lang('formhash'), 'callback_cksubmit['.formhash(0, '1', '').']');
-		$this->form_validation->set_rules('username', lang('username'), 'required|trim|callback_cklogin');
+		$this->form_validation->set_rules('formhash', lang('formhash'), 'callback_cksubmit['.formhash(0, '', '').']');
+		$this->form_validation->set_rules('username', lang('username'), 'callback_cklogin');
 		$this->form_validation->set_rules('password', lang('password'), 'required');		
 		if ($this->form_validation->run())
 		{
+			$passport = $this->form_validation->set_value('username');var_dump($passport);exit;
 			$this->load->library('uc/user_l', '', 'uc_user_l');
 			$passport = $this->uc_user_l->login($username, $password);
 			if( $passport[0] < 0)
@@ -108,7 +109,9 @@ class Member extends MX_Controller {
 	
 	function cklogin($username)
 	{
-		exit($input);return FALSE;
+		$passport = $this->rest->get('http://localhost/ciuc/index.php/api/user/login', array('username'=>$username, 'passowrd'=>$this->input->post('password')));
+// 		exit($passport);
+		return array(1,2);
 	}
 	
 	/**
