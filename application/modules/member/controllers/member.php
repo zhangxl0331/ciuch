@@ -6,6 +6,7 @@ class Member extends MX_Controller {
 	{
 		parent::__construct();
 		$this->load->helper('uch');
+		$this->load->language('member/member');
 	}
 
 	public function login()
@@ -24,7 +25,7 @@ class Member extends MX_Controller {
 				array(
 						'field'   => 'formhash',
 						'label'   => 'formhash',
-						'rules'   => 'callback__valid_formhash['.formhash($uid=0, $key='', $hash='').']'
+						'rules'   => 'callback_cksubmit['.formhash(0, '1', '').']'
 				),
 				array(
 						'field' => 'username',

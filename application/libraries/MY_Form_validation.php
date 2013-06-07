@@ -145,6 +145,10 @@ class MY_Form_validation extends CI_Form_validation
 				{
 					$result = call_user_func(array(new $class, $rule), $postdata, $param);
 				}
+				elseif(function_exists($rule))
+				{
+					$result = call_user_func($rule, $postdata, $param);
+				}
 				else
 				{
 					throw new Exception('Undefined callback "'.$rule.'" in '.$class);

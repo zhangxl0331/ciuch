@@ -64,7 +64,7 @@ $autoload['libraries'] = array('template');
 |	$autoload['helper'] = array('url', 'file');
 */
 
-$autoload['helper'] = array('cookie', 'form');
+$autoload['helper'] = array('cookie', 'form', 'language');
 
 
 /*
