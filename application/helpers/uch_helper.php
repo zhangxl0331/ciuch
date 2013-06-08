@@ -1,16 +1,23 @@
 <?php
-function formhash($uid=0, $key='', $hash='') {
+function formhash($uid=0, $key='', $hash='') 
+{
 	return substr(md5(substr(time(), 0, -7).'|'.$uid.'|'.md5($key).'|'.$hash), 8, 8);
 }
 
-function cksubmit($input, $value='') {
-	if($_SERVER['REQUEST_METHOD'] == 'POST') {
-		if((empty($_SERVER['HTTP_REFERER']) || preg_replace("/https?:\/\/([^\:\/]+).*/i", "\\1", $_SERVER['HTTP_REFERER']) == preg_replace("/([^\:]+).*/", "\\1", $_SERVER['HTTP_HOST'])) && (empty($value) || $input == $value)) {
+function submitcheck($var, $value='') 
+{
+	if(!empty($_POST[$var]) && $_SERVER['REQUEST_METHOD'] == 'POST') 
+	{
+		if((empty($_SERVER['HTTP_REFERER']) || preg_replace("/https?:\/\/([^\:\/]+).*/i", "\\1", $_SERVER['HTTP_REFERER']) == preg_replace("/([^\:]+).*/", "\\1", $_SERVER['HTTP_HOST'])) && $_POST['formhash'] == $value) 
+		{
 			return true;
-		} else {return false;
-			showmessage('submit_invalid');
+		} 
+		else 
+		{
+			return false;
 		}
-	} else {
+	} else 
+	{
 		return false;
 	}
 }

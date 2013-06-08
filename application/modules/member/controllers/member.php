@@ -6,7 +6,7 @@ class Member extends MX_Controller {
 	{
 		parent::__construct();
 		$this->load->helper('uch');
-		$this->load->language(array('cp', 'member/member'));
+		$this->load->language(array('message', 'member/member'));
 	}
 
 	public function login()
@@ -16,9 +16,7 @@ class Member extends MX_Controller {
 		$cookietime = intval($this->input->get_post('cookietime'));
 		
 		$this->load->library('form_validation');
-		$this->form_validation->set_rules('loginsubmit', lang('loginsubmit'), 'required');
-		$this->form_validation->set_rules('formhash', lang('formhash'), 'callback_cksubmit['.formhash(0, '', '').']');
-		$this->form_validation->set_rules('username', lang('username'), 'callback_cklogin');
+		$this->form_validation->set_rules('username', lang('username'), 'callback_cklogin[loginsubmit]');
 		$this->form_validation->set_rules('password', lang('password'), 'required');		
 		if ($this->form_validation->run())
 		{
@@ -107,11 +105,17 @@ class Member extends MX_Controller {
 		->build('login');
 	}
 	
-	function cklogin($username)
+	function cklogin($username, $var)
 	{
-		$passport = $this->rest->get('http://localhost/ciuc/index.php/api/user/login', array('username'=>$username, 'passowrd'=>$this->input->post('password')));
-// 		exit($passport);
-		return array(1,2);
+		if( ! submitcheck($var, formhash(0, '', '')))
+		{
+			$this->form_validation->set_message('cklogin', lang('submit_invalid'));
+			return FALSE;
+		}
+		$passport = $this->rest->get('uc/user/login', array('username'=>$username, 'passowrd'=>$this->input->post('password')));
+		var_dump($passport);exit;
+		$this->form_validation->set_message('cklogin', lang('submit_invalid'));
+		return $passport;
 	}
 	
 	/**
