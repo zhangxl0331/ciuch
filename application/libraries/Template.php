@@ -662,7 +662,7 @@ class Template
 	}
 
 	// A module view file can be overriden in a theme
-	private function _find_view($view, array $data, $parse_view = TRUE)
+	public function _find_view($view, array $data, $parse_view = TRUE)
 	{
 		// Only bother looking in themes if there is a theme
 		if ( ! empty($this->_theme))

@@ -10,17 +10,17 @@
 		<p><?=lang('if_have_an_account')?></p>
 	</caption>
 	<tbody>
-	<tr><th width="100"><?=lang('username', 'username');?></th><td><?=form_input(array('name'=>'username', 'id'=>'username', 'class'=>'t_input', 'value'=>$membername, 'tabindex'=>2));?></td></tr>
-	<tr><th width="100"><?=lang('password', 'password');?></th><td><?=form_password(array('name'=>'password', 'id'=>'password', 'class'=>'t_input', 'value'=>$password, 'tabindex'=>3));?></td></tr>
+	<tr><th width="100"><?=lang('username', 'username');?></th><td><?=form_input(array('name'=>'username', 'id'=>'username', 'class'=>'t_input', 'value'=>set_value('username'), 'tabindex'=>2));?></td></tr>
+	<tr><th width="100"><?=lang('password', 'password');?></th><td><?=form_password(array('name'=>'password', 'id'=>'password', 'class'=>'t_input', 'value'=>set_value('password'), 'tabindex'=>3));?></td></tr>
 	<tr>
 		<th width="100">&nbsp;</th>
 		<td>
-			<?=form_checkbox(array('id'=>'cookietime', 'name'=>'cookietime', 'value'=>315360000, 'checked'=>$cookiecheck, 'style'=>'margin-bottom: -2px'))?><?=lang('auto_login_next_time', 'cookietime');?>
+			<?=form_checkbox(array('id'=>'cookietime', 'name'=>'cookietime', 'value'=>315360000, 'checked'=>set_checkbox('cookietime'), 'style'=>'margin-bottom: -2px'))?><?=lang('auto_login_next_time', 'cookietime');?>
 		</td>
 	</tr>
 	</tbody>
 	<tr><th width="100">&nbsp;</th><td>
-		<?=form_hidden('refer', $refer);?>
+		<?=form_hidden('refer', '');?>
 		<?=form_submit(array('id'=>'loginsubmit', 'name'=>'loginsubmit', 'value'=>lang('login'), 'class'=>'submit', 'tabindex'=>5));?>
 		<a href="do.php?ac=lostpasswd"><?=lang('lost_passwd')?></a>
 	</td></tr>

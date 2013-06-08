@@ -1,4 +1,4 @@
-{{ if not input:inajax }}
+<?php if(!$this->input->is_ajax_request()):?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -6,7 +6,7 @@
 <meta http-equiv="x-ua-compatible" content="ie=7" />
 <title>
 {{ if template:title }}{{ template:title }} - {{ endif }}
-{{ if uch:space:realname }}{{ uch:space:username }} - {{ endif }}
+{{ if user:username }}{{ user:username }} - {{ endif }}
 {{ uch:sconfig:sitename }} - Powered by {{ uch:config:sitename }}
 </title>
 {{ theme:js file="script_cookie.js" }}
@@ -141,4 +141,4 @@
 		{{ if ad:contenttop }}<div id="ad_contenttop">{{ad/contenttop}}</div>{{ endif }}
 	{{ endif }}
 
-{{ endif }}
+<?php endif;?>

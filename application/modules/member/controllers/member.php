@@ -7,99 +7,21 @@ class Member extends MX_Controller {
 		parent::__construct();
 		$this->load->helper('uch');
 		$this->load->language(array('message', 'member/member'));
+		$this->load->model(array('member/member_m'));
 	}
 
 	public function login()
 	{
-		$username = trim($this->input->get_post('username'));
 		$password = $this->input->get_post('password');
+		$username = trim($this->input->get_post('username'));
 		$cookietime = intval($this->input->get_post('cookietime'));
+		$cookiecheck = $cookietime?' checked':'';
 		
 		$this->load->library('form_validation');
-		$this->form_validation->set_rules('username', lang('username'), 'callback_cklogin[loginsubmit]');
+		$this->form_validation->set_rules('username', lang('username'), 'required|callback_cklogin[loginsubmit]');
 		$this->form_validation->set_rules('password', lang('password'), 'required');		
-		if ($this->form_validation->run())
-		{
-			$passport = $this->form_validation->set_value('username');var_dump($passport);exit;
-			$this->load->library('uc/user_l', '', 'uc_user_l');
-			$passport = $this->uc_user_l->login($username, $password);
-			if( $passport[0] < 0)
-			{
-				show_error('login_failure_please_re_login');
-			}
-			
-			$setarr = array(
-					'uid' => $passport[0],
-					'username' => $passport[1],
-					'password' => md5("$passport[0]|".now()),
-					'email'	=> $passport[3],
-					'groupid' => 0,
-			);
-			$this->load->library('member/member_l');
-			if( ! $space = $this->member_l->member($setarr['uid']))
-			{
-    			$this->member_l->replace_member($setarr['uid'], $setarr['username'], $setarr['password']);
-			}
-			
-			$this->load->library('space/space_l');
-	    	if( ! $space = $this->space_l->space($setarr['uid'])) 
-	    	{
-	    		$this->space_l->space_open($setarr['uid'], $setarr['username'], $setarr['groupid'], $setarr['email']);
-// 				uc_pm_send
-// 				feed_add
-	    	} 
-
-
-			Events::trigger('insert_session', $setarr);
-			
-			$this->load->helper('global');
-			set_cookie('auth', authcode("$setarr[password]\t$setarr[uid]", 'ENCODE'), $cookietime);
-			set_cookie('loginuser', $setarr['username'], 31536000);
-			set_cookie('_refer', '');
-			$this->load->helper('url');
-			redirect(base_url().'blog');
-			$ucsynlogin = uc_user_synlogin($setarr['uid']);
-			exit;
-			// Kill the session
-			$this->session->unset_userdata('redirect_to');
-		
-			// Deprecated.
-			$this->hooks->_call_hook('post_user_login');
-		
-			// trigger a post login event for third party devs
-			Events::trigger('post_user_login');
-		
-			if ($this->input->is_ajax_request())
-			{
-				$user = $this->ion_auth->get_user_by_email($user->email);
-				$user->password = '';
-				$user->salt = '';
-		
-				exit(json_encode(array('status' => true, 'message' => lang('user_logged_in'), 'data' => $user)));
-			}
-			else
-			{
-				$this->session->set_flashdata('success', lang('user_logged_in'));
-			}
-		
-			// Don't allow protocols or cheeky requests
-			if (strpos($redirect_to, ':') !== FALSE and strpos($redirect_to, site_url()) !== 0)
-			{
-				// Just login to the homepage
-				redirect('');
-			}
-		
-			// Passes muster, on your way
-			else
-			{
-				redirect($redirect_to ? $redirect_to : '');
-			}
-		}
-		$membername = ! get_cookie('loginuser')?'':get_cookie('loginuser');
-		$cookiecheck = ' checked';
-		
-		$this->load->vars(array('membername'=>'', 'password'=>'', 'cookiecheck'=>true, 'refer'=>''));
-		
+		$this->form_validation->run();
+				
 		$this->template
 		->set('nosidebar', 1)
 		->build('login');
@@ -112,10 +34,30 @@ class Member extends MX_Controller {
 			$this->form_validation->set_message('cklogin', lang('submit_invalid'));
 			return FALSE;
 		}
-		$passport = $this->rest->get('uc/user/login', array('username'=>$username, 'passowrd'=>$this->input->post('password')));
-		var_dump($passport);exit;
-		$this->form_validation->set_message('cklogin', lang('submit_invalid'));
-		return $passport;
+		$passport = $this->rest->get('uc/user/login', array('username'=>$username, 'password'=>$this->input->post('password')));
+
+		if($passport['uid'] < 0)
+		{
+			$this->form_validation->set_message('cklogin', lang('login_failure_please_re_login'));
+			return FALSE;
+		}
+		else 
+		{
+			$setarr = array(
+					'uid' => $passport['uid'],
+					'username' => $passport['username'],
+					'password' => md5("$passport[uid]|time()"),
+					'lastactivity' => time(),
+					'ip' => $this->input->ip_address()
+			);
+			
+			$this->member_m->db->replace('session', $setarr);
+			set_cookie('auth', authcode("$setarr[password]\t$setarr[uid]", 'ENCODE'), intval($_POST['cookietime']));
+			set_cookie('loginuser', $username, 31536000);
+			set_cookie('_refer', '');
+			redirect('space/home');
+			return TRUE;
+		}
 	}
 	
 	/**

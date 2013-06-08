@@ -125,7 +125,7 @@ class Plugins
 		// Setup our paths from the data array
 		list($class, $method) = explode(':', $plugin);
 
-		foreach (array(APPPATH, ADDONPATH, SHARED_ADDONPATH) as $directory)
+		foreach (array(APPPATH) as $directory)
 		{
 			if (file_exists($path = $directory.'plugins/'.$class.'.php'))
 			{
@@ -140,20 +140,26 @@ class Plugins
 			}
 
 			// Maybe it's a module
-			if (module_exists($class))
+			if (method_exists( $this->_ci->router, 'fetch_module' ))
 			{
-				if (file_exists($path = $directory.'modules/'.$class.'/plugin.php'))
+				foreach (Modules::$locations as $location => $offset)
 				{
-					$dirname = dirname($path).'/';
-
-					// Set the module as a package so I can load stuff
-					$this->_ci->load->add_package_path($dirname);
-
-					$response = $this->_process($path, $class, $method, $attributes, $content);
-
-					$this->_ci->load->remove_package_path($dirname);
-
-					return $response;
+					if (is_dir($location.$class))
+					{
+						if (file_exists($path = $location.$class.'/plugin.php'))
+						{
+							$dirname = dirname($path).'/';
+					
+							// Set the module as a package so I can load stuff
+							$this->_ci->load->add_package_path($dirname);
+					
+							$result = $this->_process($path, $class, $method, $attributes, $content);
+								
+							$this->_ci->load->remove_package_path($dirname);
+					
+							break;
+						}
+					}
 				}
 			}
 		}

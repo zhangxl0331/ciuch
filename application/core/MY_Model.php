@@ -29,10 +29,9 @@ class MY_Model extends CI_Model
 	}
 	
 	function __get($key)
-	{		
-		$CI =& get_instance();
-		$CI->load->database($this->_db, FALSE, TRUE);
-		return $CI->$key;
+	{				
+		load_class('Loader', 'core')->database($this->_db, FALSE, TRUE);
+		return parent::__get($key);		
 	}	
 
 	function __call($method, $args=array())

@@ -132,7 +132,7 @@ class User extends REST_Controller {
 		$passwordmd5 = preg_match('/^\w{32}$/', $password) ? $password : md5($password);
 		if(empty($user)) {
 			$status = -1;
-			return array($status);
+			$this->response(array('uid'=>$status));
 		} elseif($user['password'] != md5($passwordmd5.$user['salt'])) {
 			$status = -2;
 		} elseif($checkques && $user['secques'] != '' && $user['secques'] != $this->_ci->uc_user_m->quescrypt($questionid, $answer)) {
@@ -141,7 +141,7 @@ class User extends REST_Controller {
 			$status = $user['uid'];
 		}
 		$merge = $status != -1 && !$isuid && $this->_ci->uc_user_m->check_mergeuser($username) ? 1 : 0;
-		$return = array('status'=>$status, 'username'=>$user['username'], 'password'=>$password, 'email'=>$user['email'], 'merge'=>$merge);
+		$return = array('uid'=>$status, 'username'=>$user['username'], 'password'=>$password, 'email'=>$user['email'], 'merge'=>$merge);
 		
 		$this->response($return);
 	}
