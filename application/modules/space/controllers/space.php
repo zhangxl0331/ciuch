@@ -5,6 +5,10 @@ class Space extends MY_Controller {
 	public function __construct()
 	{
 		parent::__construct();
+		if(empty($this->user))
+		{
+			redirect('member/login');
+		}
 	}
 	
 	public function guide()

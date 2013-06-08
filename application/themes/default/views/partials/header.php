@@ -6,7 +6,7 @@
 <meta http-equiv="x-ua-compatible" content="ie=7" />
 <title>
 {{ if template:title }}{{ template:title }} - {{ endif }}
-{{ if user:username }}{{ user:username }} - {{ endif }}
+{{ if space:username }}{{ space:username }} - {{ endif }}
 {{ uch:sconfig:sitename }} - Powered by {{ uch:config:sitename }}
 </title>
 {{ theme:js file="script_cookie.js" }}
