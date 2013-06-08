@@ -5,10 +5,7 @@ class Space extends MY_Controller {
 	public function __construct()
 	{
 		parent::__construct();
-		if(empty($this->user))
-		{
-			redirect('member/login');
-		}
+		
 	}
 	
 	public function guide()
@@ -35,6 +32,10 @@ class Space extends MY_Controller {
 	
 	public function home()
 	{
+		if(empty($this->user))
+		{
+			redirect('member/login');
+		}
 // 		$uch = $this->load->get_var('uch');
 // 		if($_GET['view'] == 'guide') {
 // 			redirect(base_url('space/guide'));

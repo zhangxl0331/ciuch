@@ -41,7 +41,7 @@
 	<div class="headerwarp">
 		<h1 class="logo"><a href="index.php"><img src="{{ uch:sconfig:sitelogo }}" alt="{{ uch:sconfig:sitename }}" /></a></h1>
 		<ul class="menu">
-		{{ if sglobal:supe_uid }}
+		{{ if user:uid }}
 			<li><a href="space.php?do=home">首页</a></li>
 			<li><a href="space.php">个人主页</a></li>
 			<li><a href="space.php?do=friend">好友</a></li>
