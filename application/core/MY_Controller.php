@@ -46,8 +46,8 @@ class MY_Controller extends MX_Controller
 
 		$this->benchmark->mark('my_controller_start');
 		
-		$this->load->model('member/member_m');
-		$this->user = $this->member_m->checkauth();
+		$this->load->model('user/user_m');
+		$this->user = $this->user_m->checkauth();
 		$this->load->vars('user', $this->user);
 		
 		$this->benchmark->mark('my_controller_end');
