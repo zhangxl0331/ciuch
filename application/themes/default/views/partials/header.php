@@ -7,7 +7,7 @@
 <title>
 {{ if template:title }}{{ template:title }} - {{ endif }}
 {{ if space:username }}{{ space:username }} - {{ endif }}
-{{ uch:sconfig:sitename }} - Powered by {{ uch:config:sitename }}
+<?=$config['sitename']?> - Powered by <?=$config['sitename']?>
 </title>
 {{ theme:js file="script_cookie.js" }}
 {{ theme:js file="script_common.js" }}
@@ -20,7 +20,7 @@
 {{ theme:css file="style.css" theme=default }}
 {{ theme:css file="style.css" theme=uch:space:theme }}
 {{ else }}
-{{ theme:css file="style.css" theme=uch:sconfig:template }}
+{{ theme:css file="style.css" theme=<?=$config['template']?> }}
 {{ endif }}
 <style type="text/css">
 {{ if uch:space:css }}
@@ -39,7 +39,7 @@
 <div id="header">
 	{{ if ad:header }}<div id="ad_header">{{ad/header}}</div>{{ endif }}
 	<div class="headerwarp">
-		<h1 class="logo"><a href="index.php"><img src="{{ uch:sconfig:sitelogo }}" alt="{{ uch:sconfig:sitename }}" /></a></h1>
+		<h1 class="logo"><a href="index.php"><img src="<?=$config['sitelogo']?>" alt="<?=$config['sitename']?>" /></a></h1>
 		<ul class="menu">
 		{{ if user:uid }}
 			<li><a href="space.php?do=home">首页</a></li>

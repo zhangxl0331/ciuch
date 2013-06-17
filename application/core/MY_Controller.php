@@ -50,6 +50,10 @@ class MY_Controller extends MX_Controller
 		$this->user = $this->user_m->checkauth();
 		$this->load->vars('user', $this->user);
 		
+		$this->load->model('config/config_m');
+		$this->config = $this->config_m->config_cache();
+		$this->load->vars('config', $this->config);
+		
 		$this->benchmark->mark('my_controller_end');
 	}
 }
