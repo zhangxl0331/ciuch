@@ -12,9 +12,9 @@ class Member extends MX_Controller {
 
 	public function login()
 	{
-		$password = $this->input->get_post('password');
-		$username = trim($this->input->get_post('username'));
-		$cookietime = intval($this->input->get_post('cookietime'));
+		$password = $this->input->post('password');
+		$username = trim($this->input->post('username'));
+		$cookietime = intval($this->input->post('cookietime'));
 		$cookiecheck = $cookietime?' checked':'';
 		
 		$this->load->library('form_validation');
@@ -102,6 +102,21 @@ class Member extends MX_Controller {
 // 			call_user_func(array($this, $ac), $params);
 // 		}
 // 	}
+
+	public function logout()
+	{
+		if($this->user) {
+			$this->member_m->db->delete('session', array('uid'=>$this->user['uid']));
+			$this->member_m->db->delete('adminsession', array('uid'=>$this->user['uid']));
+		}
+		
+		//$this->rest->get('uc/user/synlogout', array('username'=>$username, 'password'=>$this->input->post('password')));
+		
+		set_cookie('auth', '', -86400 * 365);
+		set_cookie('_refer', '');
+
+		redirect('homepage');
+	}
 	
 }
 
