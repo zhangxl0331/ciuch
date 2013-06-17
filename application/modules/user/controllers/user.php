@@ -1,13 +1,13 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Member extends MX_Controller {
+class User extends MX_Controller {
 
 	function __construct()
 	{
 		parent::__construct();
 		$this->load->helper('uch');
-		$this->load->language(array('message', 'member/member'));
-		$this->load->model(array('member/member_m'));
+		$this->load->language(array('message', 'user/user'));
+		$this->load->model(array('user/user_m'));
 	}
 
 	public function login()
