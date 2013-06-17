@@ -73,16 +73,14 @@ function submitcheck($var, $value='')
 
 function showmessage($msgkey, $url_forward='', $second=1, $values=array())
 {
-	$loader = &load_class('Loader', 'core');
-	$loader->vars(array('ad'=>''));
+	$this->load->vars(array('ad'=>''));
 
 	if(isset($_GET['inajax']) && $url_forward && empty($second)) {
 		header("HTTP/1.1 301 Moved Permanently");
 		header("Location: $url_forward");
 	} else {
-		$lang = &load_class('Lang', 'core');
-		$lang->load('message');
-		$message = $lang->line($msgkey);
+		$this->load->language('message');
+		$message = $this->lang->line($msgkey);
 		if($message) {
 			if($values) {
 				foreach ($values as $k => $v) {
