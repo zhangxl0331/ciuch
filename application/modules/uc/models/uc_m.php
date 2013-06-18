@@ -7,7 +7,7 @@
 	$Id: user.php 879 2008-12-15 03:28:36Z zhaoxiongfei $
 */
 
-class user_m extends CI_Model
+class uc_m extends CI_Model
 {
 
 	protected $_db = 'uc';

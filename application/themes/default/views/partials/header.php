@@ -2,12 +2,12 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<meta http-equiv="content-type" content="text/html; charset={{ helper:config item='charset' }}" />
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 <meta http-equiv="x-ua-compatible" content="ie=7" />
 <title>
 {{ if template:title }}{{ template:title }} - {{ endif }}
 <?php if($space):?><?=$space['username']?> - <?php endif;?>
-<?=$config['sitename']?> - Powered by <?=$config['sitename']?>
+<?=$config['sitename']?>
 </title>
 
 <link href="application/themes/default/css/style.css" rel="stylesheet" type="text/css">

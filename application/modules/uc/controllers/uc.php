@@ -15,7 +15,7 @@ define('UC_USER_EMAIL_FORMAT_ILLEGAL', -4);
 define('UC_USER_EMAIL_ACCESS_ILLEGAL', -5);
 define('UC_USER_EMAIL_EXISTS', -6);
 
-class User extends REST_Controller {
+class Uc extends REST_Controller {
 
 	private $_ci;
 	
