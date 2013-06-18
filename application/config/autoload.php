@@ -64,7 +64,7 @@ $autoload['libraries'] = array('events', 'template');
 |	$autoload['helper'] = array('url', 'file');
 */
 
-$autoload['helper'] = array('cookie', 'url', 'date', 'language', 'global');
+$autoload['helper'] = array('cookie', 'url', 'date', 'language', 'global', 'form');
 
 
 /*

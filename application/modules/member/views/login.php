@@ -1,4 +1,4 @@
-<form id="loginform" name="loginform" action="{{ url:base }}member/{{ config:login_action }}?ref" method="post" class="c_form">
+<form id="loginform" name="loginform" action="{{ url:site }}member/{{ config:login_action }}?ref" method="post" class="c_form">
 <table cellpadding="0" cellspacing="0" class="formtable">
 	<caption>
 		<h2>请登录</h2>
