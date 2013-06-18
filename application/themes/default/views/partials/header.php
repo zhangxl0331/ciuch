@@ -61,16 +61,16 @@
 	
 		<div class="nav_account">
 		{{ if sglobal:supe_uid }}
-			<a href="{{ url:base }}space/uid-{{ sglobal:supe_uid }}.html" class="login_thumb"><img src="{{avatar(sglobal[supe_uid],small)}}" alt="{{ uch:space:realname }}" width="20" height="20" /></a>
-			<a href="{{ url:base }}space/uid-{{ sglobal:supe_uid }}.html" class="loginName">{{ uch:space:realname }}</a>
+			<a href="{{ url:site }}space/uid-{{ sglobal:supe_uid }}.html" class="login_thumb"><img src="{{avatar(sglobal[supe_uid],small)}}" alt="{{ uch:space:realname }}" width="20" height="20" /></a>
+			<a href="{{ url:site }}space/uid-{{ sglobal:supe_uid }}.html" class="loginName">{{ uch:space:realname }}</a>
 			{{if uch:space:realname != member:username }}({{ member:username }}){{endif}}
 			<br />
 			{{if not uch:config:closeinvite }}<a href="cp.php?ac=invite">邀请</a> | {{ endif }}<a href="cp.php">设置</a> | <a href="cp.php?ac=privacy">隐私</a> | <a href="cp.php?ac=common&op=logout">退出</a>
 		{{ else }}
-			<a href="{{ url:base }}member/{{ uch:config:register_action }}" class="login_thumb"><img src="{{avatar(sglobal:supe_uid,small)}}" width="20" height="20" /></a>
+			<a href="{{ url:site }}member/{{ uch:config:register_action }}" class="login_thumb"><img src="{{avatar(sglobal:supe_uid,small)}}" width="20" height="20" /></a>
 			欢迎您<br>
-			<a href="{{ url:base }}member/{{ uch:config:login_action }}">登录</a> | 
-			<a href="{{ url:base }}member/{{ uch:config:register_action }}">注册</a>
+			<a href="{{ url:site }}member/{{ uch:config:login_action }}">登录</a> | 
+			<a href="{{ url:site }}member/{{ uch:config:register_action }}">注册</a>
 		{{ endif }}
 		</div>
 	</div>
@@ -129,7 +129,7 @@
 					<p><input type="checkbox" id="cookietime" name="cookietime" value="315360000" checked /><label for="cookietime">记住我</label></p>
 					<p>
 						<input type="submit" id="loginsubmit" name="loginsubmit" value="登录" class="submit"  />
-						<a href="{{ url:base }}member/{{ uch:config:register_action }}" class="button">注册</a>
+						<a href="{{ url:site }}member/{{ uch:config:register_action }}" class="button">注册</a>
 					</p>
 				</form>
 			</div>
