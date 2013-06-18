@@ -57,7 +57,7 @@ class KeyPrefixProcessor implements CommandProcessorInterface
      */
     public function process(CommandInterface $command)
     {
-        if ($command instanceof PrefixableCommandInterface && $command->getArguments()) {
+        if ($command instanceof PrefixableCommandInterface) {
             $command->prefixKeys($this->prefix);
         }
     }

@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Config_m extends CI_Model
+class Config_m extends MY_Model
 {	
 	protected $_table = 'config';
 	
@@ -13,49 +13,52 @@ class Config_m extends CI_Model
 		$this->load->driver('cache');
 	}
 	
-	public function config_cache($updatedata=true)
+	public function config_cache($update=FALSE)
 	{
-		$config = array();
+		$config = $this->cache->get('config');
 		
-		$rows = $this->db->get('config')->result_array();
-		foreach($rows as $value)
+		if( ! $config || $update)
 		{
-			if($value['var'] == 'privacy')
+			$rows = $this->db->get('config')->result_array();
+			foreach($rows as $value)
 			{
-				$value['datavalue'] = empty($value['datavalue'])?array():unserialize($value['datavalue']);
+				if($value['var'] == 'privacy')
+				{
+					$value['datavalue'] = empty($value['datavalue'])?array():unserialize($value['datavalue']);
+				}
+				$config[$value['var']] = $value['datavalue'];
 			}
-			$config[$value['var']] = $value['datavalue'];
-		}
-	
-		if(empty($config['sitekey']))
-		{
-			$config['sitekey'] = '';
-		}
-	
-		if(empty($config['login_action']))
-		{
-			$config['login_action'] = md5('login'.md5($config['sitekey']));
-		}
-	
-		if(empty($config['register_action']))
-		{
-			$config['register_action'] = md5('register'.md5($config['sitekey']));
-		}
-	
-		if(empty($config['template']))
-		{
-			$config['template'] = 'default';
-		}
-	
-		if(empty($config['onlinehold']) OR intval($config['onlinehold']) < 300)
-		{
-			$config['onlinehold'] = 300;
-		}
 		
-		if(empty($config['feedfilternum']) || $config['feedfilternum']<1) $config['feedfilternum'] = 1;
-		if(empty($config['showallfriendnum']) || $config['showallfriendnum']<1) $config['showallfriendnum'] = 10;
-	
-		$this->cache->save('config', $config);
+			if(empty($config['sitekey']))
+			{
+				$config['sitekey'] = '';
+			}
+		
+			if(empty($config['login_action']))
+			{
+				$config['login_action'] = md5('login'.md5($config['sitekey']));
+			}
+		
+			if(empty($config['register_action']))
+			{
+				$config['register_action'] = md5('register'.md5($config['sitekey']));
+			}
+		
+			if(empty($config['template']))
+			{
+				$config['template'] = 'default';
+			}
+		
+			if(empty($config['onlinehold']) OR intval($config['onlinehold']) < 300)
+			{
+				$config['onlinehold'] = 300;
+			}
+			
+			if(empty($config['feedfilternum']) || $config['feedfilternum']<1) $config['feedfilternum'] = 1;
+			if(empty($config['showallfriendnum']) || $config['showallfriendnum']<1) $config['showallfriendnum'] = 10;
+		
+			$this->cache->save('config', $config);
+		}
 		
 		return $config;
 	}

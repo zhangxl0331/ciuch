@@ -11,7 +11,7 @@
 
 namespace Predis\Protocol\Text;
 
-use Predis\CommunicationException;
+use Predis\Helpers;
 use Predis\ResponseError;
 use Predis\ResponseQueued;
 use Predis\ServerException;
@@ -98,7 +98,7 @@ class TextProtocol implements ProtocolInterface
                 if ($count === -1) {
                     return null;
                 }
-                if ($this->mbiterable) {
+                if ($this->mbiterable == true) {
                     return new MultiBulkResponseSimple($connection, $count);
                 }
 
@@ -117,7 +117,7 @@ class TextProtocol implements ProtocolInterface
                 return new ResponseError($payload);
 
             default:
-                CommunicationException::handle(new ProtocolException(
+                Helpers::onCommunicationException(new ProtocolException(
                     $connection, "Unknown prefix: '$prefix'"
                 ));
         }

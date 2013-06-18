@@ -79,15 +79,15 @@ class ZSetUnionStore extends PrefixableCommand
      */
     public function prefixKeys($prefix)
     {
-        if ($arguments = $this->getArguments()) {
-            $arguments[0] = "$prefix{$arguments[0]}";
-            $length = ((int) $arguments[1]) + 2;
+        $arguments = $this->getArguments();
 
-            for ($i = 2; $i < $length; $i++) {
-                $arguments[$i] = "$prefix{$arguments[$i]}";
-            }
+        $arguments[0] = "$prefix{$arguments[0]}";
+        $length = ((int) $arguments[1]) + 2;
 
-            $this->setRawArguments($arguments);
+        for ($i = 2; $i < $length; $i++) {
+            $arguments[$i] = "$prefix{$arguments[$i]}";
         }
+
+        $this->setRawArguments($arguments);
     }
 }

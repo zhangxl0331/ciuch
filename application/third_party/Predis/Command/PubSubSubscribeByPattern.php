@@ -11,6 +11,8 @@
 
 namespace Predis\Command;
 
+use Predis\Helpers;
+
 /**
  * @link http://redis.io/commands/psubscribe
  * @author Daniele Alessandri <suppakilla@gmail.com>

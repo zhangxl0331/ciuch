@@ -13,7 +13,7 @@ namespace Predis\PubSub;
 
 use Predis\ClientException;
 use Predis\ClientInterface;
-use Predis\Command\AbstractCommand as Command;
+use Predis\Helpers;
 use Predis\NotSupportedException;
 use Predis\Connection\AggregatedConnectionInterface;
 
@@ -39,16 +39,6 @@ class PubSubContext extends AbstractPubSubContext
 
         $this->genericSubscribeInit('subscribe');
         $this->genericSubscribeInit('psubscribe');
-    }
-
-    /**
-     * Returns the underlying client instance used by the pub/sub iterator.
-     *
-     * @return ClientInterface
-     */
-    public function getClient()
-    {
-        return $this->client;
     }
 
     /**
@@ -87,7 +77,7 @@ class PubSubContext extends AbstractPubSubContext
      */
     protected function writeCommand($method, $arguments)
     {
-        $arguments = Command::normalizeArguments($arguments);
+        $arguments = Helpers::filterArrayArguments($arguments);
         $command = $this->client->createCommand($method, $arguments);
         $this->client->getConnection()->writeCommand($command);
     }

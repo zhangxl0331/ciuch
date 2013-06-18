@@ -30,15 +30,19 @@ abstract class ScriptedCommand extends ServerEvalSHA
     /**
      * Specifies the number of arguments that should be considered as keys.
      *
-     * The default behaviour for the base class is to return 0 to indicate that
+     * The default behaviour for the base class is to return FALSE to indicate that
      * all the elements of the arguments array should be considered as keys, but
      * subclasses can enforce a static number of keys.
      *
-     * @return int
+     * @todo How about returning 1 by default to make scripted commands act like
+     *       variadic ones where the first argument is the key (KEYS[1]) and the
+     *       rest are values (ARGV)?
+     *
+     * @return int|Boolean
      */
     protected function getKeysCount()
     {
-        return 0;
+        return false;
     }
 
     /**
@@ -56,11 +60,13 @@ abstract class ScriptedCommand extends ServerEvalSHA
      */
     protected function filterArguments(Array $arguments)
     {
-        if (($numkeys = $this->getKeysCount()) && $numkeys < 0) {
-            $numkeys = count($arguments) + $numkeys;
+        if (false !== $numkeys = $this->getKeysCount()) {
+            $numkeys = $numkeys >= 0 ? $numkeys : count($arguments) + $numkeys;
+        } else {
+            $numkeys = count($arguments);
         }
 
-        return array_merge(array(sha1($this->getScript()), (int) $numkeys), $arguments);
+        return array_merge(array(sha1($this->getScript()), $numkeys), $arguments);
     }
 
     /**

@@ -33,7 +33,7 @@ class Events
 	 */
 	public function __construct()
 	{
-		self::_load_modules();
+		self::_load_modules();	
 	}
 
 	/**
@@ -42,14 +42,32 @@ class Events
 	 * Loads all active modules
 	 */
 	private static function _load_modules()
-	{
-		$_ci = get_instance();
-
-		$is_core = TRUE;
-
-		$_ci->load->model('modules/module_m');
-
-		if (!$results = $_ci->module_m->get_all())
+	{	
+		//get all the modules
+		$results = array();
+		$ci = &get_instance();
+		$locations = $ci->config->item('modules_locations');
+		foreach($locations as $key=>$value)
+		{
+			$is_core = FALSE;
+			if($key == APPPATH.'modules/')
+			{
+				$is_core = TRUE;
+			}
+			if($dh = opendir($key))
+			{
+				while (($file = readdir($dh)) !== false)
+				{
+					if( is_dir($key.$file) && $file != '.' && $file != '..')
+					{
+						$results[] = array('slug' => $file, 'is_core' => $is_core);
+					}
+				}
+				closedir($dh);
+			}
+		}	
+		
+		if (!$results)
 		{
 			return FALSE;
 		}
@@ -85,12 +103,7 @@ class Events
 		// Check the details file exists
 		if (!is_file($events_file))
 		{
-			$events_file = SHARED_ADDONPATH.'modules/'.$slug.'/events'.EXT;
-
-			if (!is_file($events_file))
-			{
-				return FALSE;
-			}
+			return FALSE;
 		}
 
 		// Sweet, include the file
@@ -111,10 +124,12 @@ class Events
 	 * @param string $event The name of the event.
 	 * @param array $callback The callback for the event.
 	 */
-	public static function register($event, array $callback)
+	public static function register($event, array $callback, $order='')
 	{
 		$key = get_class($callback[0]).'::'.$callback[1];
-		self::$_listeners[$event][$key] = $callback;
+		$order = intval($order) ? intval($order) : 100;
+		self::$_listeners[$event][str_pad($order, 3, 0, STR_PAD_LEFT).'_'.$key] = $callback;
+		ksort(self::$_listeners[$event]);
 		log_message('debug', 'Events::register() - Registered "'.$key.' with event "'.$event.'"');
 	}
 
@@ -140,11 +155,12 @@ class Events
 
 		if (self::has_listeners($event))
 		{
-			foreach (self::$_listeners[$event] as $listener)
+			foreach (self::$_listeners[$event] as $key => $listener)
 			{
 				if (is_callable($listener))
 				{
-					$calls[] = call_user_func($listener, $data);
+					$order = substr($key, 4);
+					$calls[$order] = call_user_func($listener, $data);
 				}
 			}
 		}
@@ -216,6 +232,88 @@ class Events
 		}
 
 		return FALSE;
+	}
+	
+	/**
+	 *
+	 * @access	public
+	 * @param	string
+	 * @return	array|bool
+	 */
+	
+	/**
+	 * Lists listeners if the event has listeners
+	 *
+	 * @param string $event The name of the event
+	 * @return boolean Whether the event does not has listeners
+	 */
+	public static function event_listeners($event)
+	{
+		log_message('debug', 'Events::list_listeners() - Listing listeners if event "'.$event.'" has listeners.');
+		
+
+		if (isset(self::$_listeners[$event]) AND count(self::$_listeners[$event]) > 0)
+		{
+			ksort(self::$_listeners[$event]);
+			return array_keys(self::$_listeners[$event]);
+		}
+
+		return FALSE;
+	}
+	
+	/**
+	 * Lists all the events and listeners
+	 *
+	 * @param string $event The name of the event
+	 * @return boolean Whether the event does not has listeners
+	 */
+	 public static function list_listeners()
+	{
+		log_message('debug', 'Events::list_listeners() - Listing all the events and listeners.');
+	
+		if ( ! self::$_listeners)
+		{
+			return FALSE;
+		}
+		
+		$result = array();
+		foreach (self::$_listeners as $key => $value)
+		{
+			$event = self::event_listeners($key);
+			$module = end(explode('_', current(explode('::', $event[0]))));
+			$result[strtolower($module)][$key] = $event;
+		}
+	
+		return $result;
+	}
+	
+	/**
+	 * Lists all the events and listeners of the module
+	 *
+	 * @param string $event The name of the event
+	 * @return boolean Whether the event does not has listeners
+	 */
+	public static function module_listeners($module)
+	{
+		log_message('debug', 'Events::module_listeners() - Listing all the events and listeners of the module.');
+	
+		if ( ! self::$_listeners)
+		{
+			return FALSE;
+		}
+	
+		$result = array();
+		foreach (self::$_listeners as $key => $value)
+		{
+			$event = self::event_listeners($key);
+			$module = end(explode('_', current(explode('::', $event[0]))));
+			if(strnatcasecmp($module, end(explode('_', current(explode('::', $event[0]))))) == 0)
+			{
+				$result[$key] = $event;
+			}
+		}
+	
+		return $result;
 	}
 
 }

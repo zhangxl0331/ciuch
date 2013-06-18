@@ -1,4 +1,4 @@
-<?php defined('BASEPATH') OR exit('No direct script access allowed');
+<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 /**
  * CodeIgniter Template Class
@@ -102,7 +102,7 @@ class Template
 		// If the parse is going to be used, best make sure it's loaded
 		if ($this->_parser_enabled === TRUE)
 		{
-			class_exists('CI_Parser') OR $this->_ci->load->library('parser');
+			$this->_ci->load->library('parser');
 		}
 
 		// Modular Separation / Modular Extensions has been detected
@@ -116,7 +116,7 @@ class Template
 		$this->_method 		= $this->_ci->router->fetch_method();
 
 		// Load user agent library if not loaded
-		class_exists('CI_User_agent') OR $this->_ci->load->library('user_agent');
+		$this->_ci->load->library('user_agent');
 
 		// We'll want to know this later
 		$this->_is_mobile	= $this->_ci->agent->is_mobile();
@@ -575,15 +575,23 @@ class Template
 
 		foreach ($this->_theme_locations as $location)
 		{
+			if ($this->_is_mobile === TRUE AND is_dir($location.$theme.'/views/mobile/layouts/'))
+			{
+				foreach(glob($location.$theme . '/views/mobile/layouts/*.*') as $layout)
+				{
+					$layouts[] = pathinfo($layout, PATHINFO_BASENAME);
+				}
+				break;
+			}			
 			// Get special web layouts
-			if( is_dir($location.$theme.'/views/web/layouts/') )
+			elseif( is_dir($location.$theme.'/views/web/layouts/') )
 			{
 				foreach(glob($location.$theme . '/views/web/layouts/*.*') as $layout)
 				{
 					$layouts[] = pathinfo($layout, PATHINFO_BASENAME);
 				}
 				break;
-			}
+			}			
 
 			// So there are no web layouts, assume all layouts are web layouts
 			if(is_dir($location.$theme.'/views/layouts/'))
@@ -688,7 +696,7 @@ class Template
 		return self::_load_view($view, $this->_data + $data, $parse_view);
 	}
 
-	private function _load_view($view, array $data, $parse_view = TRUE, $override_view_path = NULL)
+	public function _load_view($view, array $data, $parse_view = TRUE, $override_view_path = NULL)
 	{
 		// Sevear hackery to load views from custom places AND maintain compatibility with Modular Extensions
 		if ($override_view_path !== NULL)
@@ -696,10 +704,8 @@ class Template
 			if ($this->_parser_enabled === TRUE AND $parse_view === TRUE)
 			{
 				// Load content and pass through the parser
-				$content = $this->_ci->parser->parse_string($this->_ci->load->file(
-					$override_view_path.$view.self::_ext($view), 
-					TRUE
-				), $data);
+				$content = $this->_ci->parser->parse_string(
+					$override_view_path.$view.self::_ext($view), $data, TRUE);
 			}
 
 			else
@@ -726,7 +732,7 @@ class Template
 				// None of that fancy stuff for me!
 				: $this->_ci->load->view($view, $data, TRUE);
 		}
-
+		
 		return $content;
 	}
 

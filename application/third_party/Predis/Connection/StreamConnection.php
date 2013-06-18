@@ -27,7 +27,6 @@ use Predis\Iterator\MultiBulkResponseSimple;
  *  - timeout: timeout to perform the connection.
  *  - read_write_timeout: timeout of read / write operations.
  *  - async_connect: performs the connection asynchronously.
- *  - tcp_nodelay: enables or disables Nagle's algorithm for coalescing.
  *  - persistent: the connection is left intact after a GC collection.
  *  - iterable_multibulk: multibulk replies treated as iterable objects.
  *
@@ -54,7 +53,7 @@ class StreamConnection extends AbstractConnection
      */
     public function __destruct()
     {
-        if (isset($this->parameters) && !$this->parameters->persistent) {
+        if (!$this->parameters->persistent) {
             $this->disconnect();
         }
     }
@@ -81,10 +80,10 @@ class StreamConnection extends AbstractConnection
         $uri = "tcp://{$parameters->host}:{$parameters->port}/";
         $flags = STREAM_CLIENT_CONNECT;
 
-        if (isset($parameters->async_connect) && $parameters->async_connect) {
+        if (isset($parameters->async_connect) && $parameters->async_connect === true) {
             $flags |= STREAM_CLIENT_ASYNC_CONNECT;
         }
-        if (isset($parameters->persistent) && $parameters->persistent) {
+        if (isset($parameters->persistent) && $parameters->persistent === true) {
             $flags |= STREAM_CLIENT_PERSISTENT;
         }
 
@@ -102,11 +101,6 @@ class StreamConnection extends AbstractConnection
             stream_set_timeout($resource, $timeoutSeconds, $timeoutUSeconds);
         }
 
-        if (isset($parameters->tcp_nodelay) && version_compare(PHP_VERSION, '5.4.0') >= 0) {
-            $socket = socket_import_stream($resource);
-            socket_set_option($socket, SOL_TCP, TCP_NODELAY, (int) $parameters->tcp_nodelay);
-        }
-
         return $resource;
     }
 
@@ -121,7 +115,7 @@ class StreamConnection extends AbstractConnection
         $uri = "unix://{$parameters->path}";
         $flags = STREAM_CLIENT_CONNECT;
 
-        if ($parameters->persistent) {
+        if ($parameters->persistent === true) {
             $flags |= STREAM_CLIENT_PERSISTENT;
         }
 
@@ -141,7 +135,7 @@ class StreamConnection extends AbstractConnection
     {
         parent::connect();
 
-        if ($this->initCmds) {
+        if (count($this->initCmds) > 0){
             $this->sendInitializationCommands();
         }
     }
@@ -250,7 +244,7 @@ class StreamConnection extends AbstractConnection
                 if ($count === -1) {
                     return null;
                 }
-                if ($this->mbiterable) {
+                if ($this->mbiterable === true) {
                     return new MultiBulkResponseSimple($this, $count);
                 }
 

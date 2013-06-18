@@ -1,0 +1,1 @@
+<li class="app-doing"><a href="{{ url:base }}doing?uid={{ uch:space:uid }}&view=me" title="{{ lang:doing }}"><image src="{{ url:base }}image/app/doing.gif" alt="{{ lang:doing }}" /></a></li>

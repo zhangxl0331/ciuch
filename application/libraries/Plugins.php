@@ -1,4 +1,4 @@
-<?php defined('BASEPATH') OR exit('No direct script access allowed');
+<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 /**
  * Central library for Plugin logic
  *
@@ -83,41 +83,72 @@ abstract class Plugin
 	 */
 	public function module_view($module, $view, $vars = array())
 	{
-		if (file_exists($this->template->get_views_path().'modules/'.$module.'/'.$view.(pathinfo($view, PATHINFO_EXTENSION) ? '' : '.php')))
+
+		if (file_exists($this->template->get_theme_path().'modules/'.$module.'/views/'.$view.(pathinfo($view, PATHINFO_EXTENSION) ? '' : EXT)))
 		{
-			$path = $this->template->get_views_path().'modules/'.$module.'/';
+			$path = $this->template->get_theme_path().'modules/'.$module.'/views/';
 		}
 		else
 		{
-			list($path, $view) = Modules::find($view, $module, 'views/');
+			foreach (Modules::$locations as $location => $offset)
+			{
+				if (file_exists($location.$module.'/views/'.$view.(pathinfo($view, PATHINFO_EXTENSION) ? '' : EXT)))
+				{
+					$path = $location.$module.'/views/';
+					break;
+				}
+			}
 		}
-
-		// save the existing view array so we can restore it
-		$save_path = $this->load->get_view_paths();
-
-		// add this view location to the array
-		$this->load->set_view_path($path);
-
-		$content = $this->load->_ci_load(array('_ci_view' => $view, '_ci_vars' => ((array)$vars), '_ci_return' => TRUE));
-
-		// Put the old array back
-		$this->load->set_view_path($save_path);
-
-		return $content;
+		
+		return $this->template->_load_view($view, $vars, TRUE, $path);
 	}
 }
 
 class Plugins
 {
 	private $loaded = array();
+	private $plugins_locations = array();
 
-	public function __construct()
+	public function __construct($config = array())
 	{
 		$this->_ci = & get_instance();
+		
+		if ( ! empty($config))
+		{
+			$this->initialize($config);
+		}
 	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Initialize preferences
+	 *
+	 * @access	public
+	 * @param	array
+	 * @return	void
+	 */
+	function initialize($config = array())
+	{
+		foreach ($config as $key => $val)
+		{
+			$this->$key = $val;
+		}
+	
+		// No locations set in config?
+		if ($this->plugins_locations === array())
+		{
+			// Let's use this obvious default
+			$this->plugins_locations = array(APPPATH . 'plugins/');
+		}
+	}
+	
+	// --------------------------------------------------------------------
 
 	public function locate($plugin, $attributes, $content)
 	{
+		$result = '';
+		
 		if (strpos($plugin, ':') === FALSE)
 		{
 			return FALSE;
@@ -125,48 +156,55 @@ class Plugins
 		// Setup our paths from the data array
 		list($class, $method) = explode(':', $plugin);
 
-		foreach (array(APPPATH) as $directory)
+		foreach ($this->plugins_locations as $location => $offset)
 		{
-			if (file_exists($path = $directory.'plugins/'.$class.'.php'))
+			if (file_exists($path = $location.$class.'.php'))
 			{
-				return $this->_process($path, $class, $method, $attributes, $content);
-			}
-
-			else {
-				if (defined('ADMIN_THEME') and file_exists($path = APPPATH.'themes/'.ADMIN_THEME.'/plugins/'.$class.'.php'))
-				{
-					return $this->_process($path, $class, $method, $attributes, $content);
-				}
-			}
-
-			// Maybe it's a module
-			if (method_exists( $this->_ci->router, 'fetch_module' ))
+				$result = $this->_process($path, $class, $method, $attributes, $content);
+				
+				break;
+			}			
+		}
+		// Maybe it's a module
+		if (method_exists( $this->_ci->router, 'fetch_module' ))
+		{
+			foreach (Modules::$locations as $location => $offset)
 			{
-				foreach (Modules::$locations as $location => $offset)
+				if (is_dir($location.$class))
 				{
-					if (is_dir($location.$class))
+					if (file_exists($path = $location.$class.'/plugin.php'))
 					{
-						if (file_exists($path = $location.$class.'/plugin.php'))
-						{
-							$dirname = dirname($path).'/';
-					
-							// Set the module as a package so I can load stuff
-							$this->_ci->load->add_package_path($dirname);
-					
-							$result = $this->_process($path, $class, $method, $attributes, $content);
-								
-							$this->_ci->load->remove_package_path($dirname);
-					
-							break;
-						}
+						$dirname = dirname($path).'/';
+				
+						// Set the module as a package so I can load stuff
+						$this->_ci->load->add_package_path($dirname);
+				
+						$result = $this->_process($path, $class, $method, $attributes, $content);
+							
+						$this->_ci->load->remove_package_path($dirname);
+				
+						break;
 					}
 				}
 			}
 		}
-
-		log_message('debug', 'Unable to load: '.$class);
-
-		return false;
+		
+		if( $result)
+		{
+			$result = $this->_make_key($result, 'ptkey');
+		}
+		else 
+		{
+			log_message('debug', 'Unable to load: '.$class);
+		}
+		
+		if( ! empty($attributes['eval']))
+		{
+			$this->_ci->load->_ci_cached_vars[$attributes['eval']] = $result;
+			unset($attributes['eval']);
+		}				
+		
+		return $result;
 	}
 
 	/**
@@ -225,5 +263,28 @@ class Plugins
 		}
 
 		return call_user_func(array($class_init, $method));
+	}
+	
+	public function _make_key($flat, $index='ptkey')
+	{
+		$return = array();
+		if(!is_array($flat))
+		{
+			$return = $flat;
+		}
+		else
+		{
+			$i = 0;
+			foreach($flat as $key=>$value)
+			{
+				$return[$key] = $this->_make_key($value, $index);
+				if(is_array($return[$key]) AND is_integer($key))
+				{
+					$return[$key][$index] = $i++;
+				}
+			}
+		}
+	
+		return $return;
 	}
 }

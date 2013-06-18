@@ -13,7 +13,6 @@ namespace Predis\Cluster;
 
 use Predis\Cluster\Hash\CRC16HashGenerator;
 use Predis\Command\CommandInterface;
-use Predis\Command\ScriptedCommand;
 
 /**
  * Default class used by Predis to calculate hashes out of keys of
@@ -128,7 +127,6 @@ class RedisClusterHashStrategy implements CommandHashStrategyInterface
             'HGET'                  => $keyIsFirstArgument,
             'HGETALL'               => $keyIsFirstArgument,
             'HMGET'                 => $keyIsFirstArgument,
-            'HMSET'                 => $keyIsFirstArgument,
             'HINCRBY'               => $keyIsFirstArgument,
             'HINCRBYFLOAT'          => $keyIsFirstArgument,
             'HKEYS'                 => $keyIsFirstArgument,
@@ -248,11 +246,9 @@ class RedisClusterHashStrategy implements CommandHashStrategyInterface
      */
     protected function getKeyFromScriptingCommands(CommandInterface $command)
     {
-        if ($command instanceof ScriptedCommand) {
-            $keys = $command->getKeys();
-        } else {
-            $keys = array_slice($args = $command->getArguments(), 2, $args[1]);
-        }
+        $keys = $command instanceof ScriptedCommand
+                    ? $command->getKeys()
+                    : array_slice($args = $command->getArguments(), 2, $args[1]);
 
         if (count($keys) === 1) {
             return $keys[0];

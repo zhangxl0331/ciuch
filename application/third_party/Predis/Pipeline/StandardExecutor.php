@@ -11,12 +11,9 @@
 
 namespace Predis\Pipeline;
 
-use Iterator;
 use SplQueue;
 use Predis\ResponseErrorInterface;
-use Predis\ResponseObjectInterface;
 use Predis\ServerException;
-use Predis\Command\CommandInterface;
 use Predis\Connection\ConnectionInterface;
 use Predis\Connection\ReplicationConnectionInterface;
 
@@ -54,27 +51,6 @@ class StandardExecutor implements PipelineExecutorInterface
     }
 
     /**
-     * Handles a response object.
-     *
-     * @param ConnectionInterface $connection
-     * @param CommandInterface $command
-     * @param ResponseObjectInterface $response
-     * @return mixed
-     */
-    protected function onResponseObject(ConnectionInterface $connection, CommandInterface $command, ResponseObjectInterface $response)
-    {
-        if ($response instanceof ResponseErrorInterface) {
-            return $this->onResponseError($connection, $response);
-        }
-
-        if ($response instanceof Iterator) {
-            return $command->parseResponse(iterator_to_array($response));
-        }
-
-        return $response;
-    }
-
-    /**
      * Handles -ERR responses returned by Redis.
      *
      * @param ConnectionInterface $connection The connection that returned the error.
@@ -82,10 +58,6 @@ class StandardExecutor implements PipelineExecutorInterface
      */
     protected function onResponseError(ConnectionInterface $connection, ResponseErrorInterface $response)
     {
-        if (!$this->exceptions) {
-            return $response;
-        }
-
         // Force disconnection to prevent protocol desynchronization.
         $connection->disconnect();
         $message = $response->getMessage();
@@ -98,23 +70,24 @@ class StandardExecutor implements PipelineExecutorInterface
      */
     public function execute(ConnectionInterface $connection, SplQueue $commands)
     {
+        $size = count($commands);
+        $values = array();
+        $exceptions = $this->exceptions;
+
         $this->checkConnection($connection);
 
         foreach ($commands as $command) {
             $connection->writeCommand($command);
         }
 
-        $values = array();
+        for ($i = 0; $i < $size; $i++) {
+            $response = $connection->readResponse($commands->dequeue());
 
-        while (!$commands->isEmpty()) {
-            $command = $commands->dequeue();
-            $response = $connection->readResponse($command);
-
-            if ($response instanceof ResponseObjectInterface) {
-                $values[] = $this->onResponseObject($connection, $command, $response);
-            } else {
-                $values[] = $command->parseResponse($response);
+            if ($response instanceof ResponseErrorInterface && $exceptions === true) {
+                $this->onResponseError($connection, $response);
             }
+
+            $values[$i] = $response instanceof \Iterator ? iterator_to_array($response) : $response;
         }
 
         return $values;

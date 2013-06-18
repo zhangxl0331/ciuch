@@ -58,8 +58,6 @@ class PredisClusterHashStrategy implements CommandHashStrategyInterface
             'TTL'                   => $keyIsFirstArgument,
             'PTTL'                  => $keyIsFirstArgument,
             'SORT'                  => $keyIsFirstArgument, // TODO
-            'DUMP'                  => $keyIsFirstArgument,
-            'RESTORE'               => $keyIsFirstArgument,
 
             /* commands operating on string values */
             'APPEND'                => $keyIsFirstArgument,
@@ -142,7 +140,6 @@ class PredisClusterHashStrategy implements CommandHashStrategyInterface
             'HGET'                  => $keyIsFirstArgument,
             'HGETALL'               => $keyIsFirstArgument,
             'HMGET'                 => $keyIsFirstArgument,
-            'HMSET'                 => $keyIsFirstArgument,
             'HINCRBY'               => $keyIsFirstArgument,
             'HINCRBYFLOAT'          => $keyIsFirstArgument,
             'HKEYS'                 => $keyIsFirstArgument,
@@ -297,11 +294,9 @@ class PredisClusterHashStrategy implements CommandHashStrategyInterface
      */
     protected function getKeyFromScriptingCommands(CommandInterface $command)
     {
-        if ($command instanceof ScriptedCommand) {
-            $keys = $command->getKeys();
-        } else {
-            $keys = array_slice($args = $command->getArguments(), 2, $args[1]);
-        }
+        $keys = $command instanceof ScriptedCommand
+                    ? $command->getKeys()
+                    : array_slice($args = $command->getArguments(), 2, $args[1]);
 
         if ($keys && $this->checkSameHashForKeys($keys)) {
             return $keys[0];
@@ -346,7 +341,7 @@ class PredisClusterHashStrategy implements CommandHashStrategyInterface
      */
     protected function checkSameHashForKeys(Array $keys)
     {
-        if (!$count = count($keys)) {
+        if (($count = count($keys)) === 0) {
             return false;
         }
 

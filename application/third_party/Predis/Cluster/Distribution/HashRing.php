@@ -122,7 +122,7 @@ class HashRing implements DistributionStrategyInterface, HashGeneratorInterface
             return;
         }
 
-        if (!$this->nodes) {
+        if (count($this->nodes) === 0) {
             throw new EmptyRingException('Cannot initialize empty hashring');
         }
 

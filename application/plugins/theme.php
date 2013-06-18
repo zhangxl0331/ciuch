@@ -56,9 +56,9 @@ class Plugin_Theme extends Plugin
 		$name = $this->attribute('name');
 		$module = $this->attribute('module');
 		$view = $module?'modules/'.$module.'/partials/'.$name:'partials/'.$name;
-// 		$data = $this->load->get_vars();
+		$data = $this->load->get_vars();
 		
-		return $this->template->_find_view($view, array(), TRUE);
+		return $this->template->_find_view($view, $data, TRUE);
 	}
 	
 	public function get_filepath($file, $type)
@@ -95,8 +95,8 @@ class Plugin_Theme extends Plugin
 		$title = $this->attribute('title');
 		$media = $this->attribute('media');
 		$type = $this->attribute('type', 'text/css');
-		$rel = $this->attribute('rel', 'stylesheet');
-		$theme = $this->attribute('theme');
+        $rel = $this->attribute('rel', 'stylesheet');
+        $theme = $this->attribute('theme');
 
 		return link_tag($this->css_url($file, $theme), $rel, $type, $title, $media);
 	}

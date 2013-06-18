@@ -1,61 +1,53 @@
-<?php defined('BASEPATH') OR exit('No direct script access allowed');
+<?php
+if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 require APPPATH."third_party/MX/Controller.php";
 
 /**
- * Code here is run before ALL controllers
- * 
- * @package PyroCMS\Core\Controllers 
+ * Controller Controller
+ * --------------------------------------
+ * Author       : $Author$
+ * Revision     : $Revision$
+ * Date         : $Date$
+ * Position     : $HeadURL$
+ *
  */
-class MY_Controller extends MX_Controller
-{
-	/**
-	 * No longer used globally
-	 * 
-	 * @deprecated remove in 2.2
-	 */
-	protected $data;
 
-	/**
-	 * The name of the module that this controller instance actually belongs to.
-	 *
-	 * @var string 
-	 */
-	public $module;
-
-	/**
-	 * The name of the controller class for the current class instance.
-	 *
-	 * @var string
-	 */
-	public $controller;
-
-	/**
-	 * The name of the method for the current request.
-	 *
-	 * @var string 
-	 */
-	public $method;
-
-	/**
-	 * Load and set data for some common used libraries.
-	 */
-	public function __construct()
+class MY_Controller extends MX_Controller {
+	  
+	function __construct()
 	{
 		parent::__construct();
-
+	    
 		$this->benchmark->mark('my_controller_start');
 		
-		$this->load->database();
+		$uch = array();
+		$mtime = explode(' ', microtime());
+		$uch['global']['timestamp'] = $mtime[1];
+		$uch['global']['supe_starttime'] = $uch['global']['timestamp'] + $mtime[0];
+		$uch['global']['supe_uid'] = 0;
+		$uch['global']['supe_username'] = '';
+		$uch['global']['inajax'] = empty($_GET['inajax'])?0:intval($_GET['inajax']);
+		$uch['global']['ajaxmenuid'] = empty($_GET['ajaxmenuid'])?'':$_GET['ajaxmenuid'];
+		$uch['global']['refer'] = empty($_SERVER['HTTP_REFERER'])?'':$_SERVER['HTTP_REFERER'];
 		
-		$this->load->model('user/user_m');
-		$this->user = $this->user_m->checkauth();
-		$this->load->vars('user', $this->user);
 		
-		$this->load->model('config/config_m');
-		$this->config = $this->config_m->config_cache();
-		$this->load->vars('config', $this->config);
+		$caches = Events::trigger('updatecache', array(), 'array');
+		foreach($caches as $key=>$value)
+		{
+			$uch[strtolower(preg_replace('/Events_(.*)::.*/', '\\1', $key))] = $value;
+		}		
+		
+		
+		$this->space_m->checkauth();
+		
+// 		$this->getuserapp();
+		$this->load->vars(array('uch'=>$uch));
+		Events::trigger('checkclose');
+		
 		
 		$this->benchmark->mark('my_controller_end');
 	}
+	
+	// end function_cache.php
 }

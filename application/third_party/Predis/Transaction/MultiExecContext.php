@@ -17,6 +17,7 @@ use Predis\ClientException;
 use Predis\ClientInterface;
 use Predis\CommunicationException;
 use Predis\ExecutableContextInterface;
+use Predis\Helpers;
 use Predis\NotSupportedException;
 use Predis\ResponseErrorInterface;
 use Predis\ResponseQueued;
@@ -442,7 +443,7 @@ class MultiExecContext implements BasicClientInterface, ExecutableContextInterfa
         // Since a MULTI/EXEC block cannot be initialized when using aggregated
         // connections, we can safely assume that Predis\Client::getConnection()
         // will always return an instance of Predis\Connection\SingleConnectionInterface.
-        CommunicationException::handle(new ProtocolException(
+        Helpers::onCommunicationException(new ProtocolException(
             $this->client->getConnection(), $message
         ));
     }

@@ -1,0 +1,1 @@
+<li{{ if router:module =='doing'}} class="active"{{ endif }}><a href="{{ url:base }}doing?uid={{ uch:space:uid }}&view=me"><span>{{ lang:doing }}</span></a></li>

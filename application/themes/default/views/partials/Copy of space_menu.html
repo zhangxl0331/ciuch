@@ -1,0 +1,18 @@
+<div class="c_header a_header">
+	<div class="avatar48"><a href="{{ helper:module }}?uid={{ space:uid }}"><img src="<!--{avatar($space[uid],small)}-->" alt="{{ space:realname }}" /></a></div>
+	<p style="font-size:14px">{{ space:realname }}的{{ helper:module lang="1" }}</p>
+	<a href="{{ helper:module }}?uid={{ space:uid }}" class="spacelink">{{ space:realname }}的主页</a>
+	<span class="pipe">|</span> <a href="cp.php?ac=poke&op=send&uid=$space[uid]" id="a_poke" onclick="ajaxmenu(event, this.id, 99999, '', -1)">打个招呼</a>
+</div>
+<div class="tabs_header">
+	<ul class="tabs">
+		{{ if privacy:index }}<li{{ if not helper:module }} class="active"{{ endif }}><a href="space.php?uid={{ space:uid }}"><span>主页</span></a></li>{{ endif }}
+		{{ if privacy:doing }}<li{{ if helper:module=='doing' }} class="active"{{ endif }}><a href="doing?uid={{ space:uid }}&view=me"><span>记录</span></a></li>{{ endif }}
+		{{ if privacy:blog }}<li{{ if helper:module=='blog' }} class="active"{{ endif }}><a href="blog?uid={{ space:uid }}&view=me"><span>日志</span></a></li>{{ endif }}
+		{{ if privacy:album }}<li{{ if helper:module=='album' }} class="active"{{ endif }}><a href="album?uid={{ space:uid }}&view=me"><span>相册</span></a></li>{{ endif }}
+		{{ if privacy:share }}<li{{ if helper:module=='share' }} class="active"{{ endif }}><a href="share?uid={{ space:uid }}&view=me"><span>分享</span></a></li>{{ endif }}
+		{{ if privacy:mtag }}<li{{ if helper:module=='mtag' || get:do=='thread' }} class="active"{{ endif }}><a href="thread?uid={{ space:uid }}&view=me"><span>话题</span></a></li>{{ endif }}
+		{{ if privacy:wall }}<li{{ if helper:module=='wall' }} class="active"{{ endif }}><a href="wall?uid={{ space:uid }}&view=me"><span>留言</span></a></li>{{ endif }}
+		{{ if privacy:friend }}<li{{ if helper:module=='friend' }} class="active"{{ endif }}><a href="friend?uid={{ space:uid }}&view=me"><span>好友</span></a></li>{{ endif }}
+	</ul>
+</div>

@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Doing extends MY_Controller {
+class Doing extends Space_Controller {
 
 	function __construct()
 	{

@@ -1,11 +1,10 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Space extends MY_Controller {
+class Space extends Space_Controller {
 
 	public function __construct()
 	{
 		parent::__construct();
-		
 	}
 	
 	public function guide()
@@ -32,10 +31,6 @@ class Space extends MY_Controller {
 	
 	public function home()
 	{
-		if(empty($this->user))
-		{
-			redirect('member/login');
-		}
 // 		$uch = $this->load->get_var('uch');
 // 		if($_GET['view'] == 'guide') {
 // 			redirect(base_url('space/guide'));

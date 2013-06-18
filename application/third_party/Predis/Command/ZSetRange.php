@@ -33,7 +33,7 @@ class ZSetRange extends PrefixableCommand
         if (count($arguments) === 4) {
             $lastType = gettype($arguments[3]);
 
-            if ($lastType === 'string' && strtoupper($arguments[3]) === 'WITHSCORES') {
+            if ($lastType === 'string' && strtolower($arguments[3]) === 'withscores') {
                 // Used for compatibility with older versions
                 $arguments[3] = array('WITHSCORES' => true);
                 $lastType = 'array';
@@ -59,7 +59,7 @@ class ZSetRange extends PrefixableCommand
         $opts = array_change_key_case($options, CASE_UPPER);
         $finalizedOpts = array();
 
-        if (!empty($opts['WITHSCORES'])) {
+        if (isset($opts['WITHSCORES'])) {
             $finalizedOpts[] = 'WITHSCORES';
         }
 

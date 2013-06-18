@@ -60,13 +60,6 @@ interface CommandInterface
     public function getArguments();
 
     /**
-     * Gets the argument of the command at the specified index.
-     *
-     * @return array
-     */
-    public function getArgument($index);
-
-    /**
      * Parses a reply buffer and returns a PHP object.
      *
      * @param string $data Binary string containing the whole reply.

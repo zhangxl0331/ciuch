@@ -41,7 +41,7 @@ use Predis\Command\CommandInterface;
  *  - timeout: timeout to perform the connection.
  *  - read_write_timeout: timeout of read / write operations.
  *
- * @link http://github.com/nrk/phpiredis
+ * @link http://github.com/seppo0010/phpiredis
  * @author Daniele Alessandri <suppakilla@gmail.com>
  */
 class PhpiredisConnection extends AbstractConnection
@@ -90,10 +90,10 @@ class PhpiredisConnection extends AbstractConnection
      */
     protected function checkParameters(ConnectionParametersInterface $parameters)
     {
-        if (isset($parameters->iterable_multibulk)) {
+        if ($parameters->iterable_multibulk === true) {
             $this->onInvalidOption('iterable_multibulk', $parameters);
         }
-        if (isset($parameters->persistent)) {
+        if ($parameters->persistent === true) {
             $this->onInvalidOption('persistent', $parameters);
         }
 
@@ -236,10 +236,10 @@ class PhpiredisConnection extends AbstractConnection
         $host = $parameters->host;
 
         if (ip2long($host) === false) {
-            if (($addresses = gethostbynamel($host)) === false) {
+            if (($address = gethostbyname($host)) === $host) {
                 $this->onConnectionError("Cannot resolve the address of $host");
             }
-            return $addresses[array_rand($addresses)];
+            return $address;
         }
 
         return $host;
@@ -296,7 +296,7 @@ class PhpiredisConnection extends AbstractConnection
 
         $this->connectWithTimeout($this->parameters);
 
-        if ($this->initCmds) {
+        if (count($this->initCmds) > 0) {
             $this->sendInitializationCommands();
         }
     }

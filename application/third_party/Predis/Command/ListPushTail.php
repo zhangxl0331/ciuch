@@ -11,6 +11,8 @@
 
 namespace Predis\Command;
 
+use Predis\Helpers;
+
 /**
  * @link http://redis.io/commands/rpush
  * @author Daniele Alessandri <suppakilla@gmail.com>
@@ -30,6 +32,6 @@ class ListPushTail extends PrefixableCommand
      */
     protected function filterArguments(Array $arguments)
     {
-        return self::normalizeVariadic($arguments);
+        return Helpers::filterVariadicValues($arguments);
     }
 }

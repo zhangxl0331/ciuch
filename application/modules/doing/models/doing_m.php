@@ -1,6 +1,6 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Doing_m extends CI_Model
+class Doing_m extends MY_Model
 {
 	protected $_table = 'blog';
 	protected $_primary_key = 'blogid';

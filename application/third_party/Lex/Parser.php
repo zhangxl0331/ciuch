@@ -186,9 +186,9 @@ class Parser
         $inCondition = $this->inCondition;
 
         if ($inCondition) {
-            $regex = '/\{\s*('.$this->variableRegex.')(\s+.*?)?\s*\}/ms';
+            $regex = '/\{\s*('.$this->variableRegex.')(\s+.*?)?\s*\}/mU';
         } else {
-            $regex = '/\{\{\s*('.$this->variableRegex.')(\s+.*?)?\s*(\/)?\}\}/ms';
+            $regex = '/\{\{\s*('.$this->variableRegex.')(\s+.*?)?\s*(\/)?\}\}/mU';
         }
         /**
          * $match[0][0] is the raw tag
@@ -730,7 +730,13 @@ class Parser
         if (preg_match_all('/(.*?)\s*=\s*(\'|"|&#?\w+;)(.*?)(?<!\\\\)\2/s', trim($parameters), $matches)) {
             $return = array();
             foreach ($matches[1] as $i => $attr) {
-                $return[trim($matches[1][$i])] = stripslashes($matches[3][$i]);
+            	if($parameters = $this->parseCallbackTags($matches[3][$i], $data, $callback))
+            	{
+            		$return[trim($matches[1][$i])] = stripslashes($parameters);
+            	}
+            	else {
+            		$return[trim($matches[1][$i])] = stripslashes($matches[3][$i]);
+            	}
             }
 
             return $return;

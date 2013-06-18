@@ -11,6 +11,8 @@
 
 namespace Predis\Command;
 
+use Predis\Helpers;
+
 /**
  * @link http://redis.io/commands/sinter
  * @author Daniele Alessandri <suppakilla@gmail.com>
@@ -30,7 +32,7 @@ class SetIntersection extends AbstractCommand implements PrefixableCommandInterf
      */
     protected function filterArguments(Array $arguments)
     {
-        return self::normalizeArguments($arguments);
+        return Helpers::filterArrayArguments($arguments);
     }
 
     /**

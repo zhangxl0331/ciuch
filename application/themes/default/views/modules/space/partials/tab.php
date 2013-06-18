@@ -1,0 +1,1 @@
+<li{{ if router:module =='space'}} class="active"{{ endif }}><a href="{{ url:base }}space?uid={{ uch:space:uid }}"><span>主页</span></a></li>

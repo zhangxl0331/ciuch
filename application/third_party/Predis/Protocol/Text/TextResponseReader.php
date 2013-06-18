@@ -11,7 +11,7 @@
 
 namespace Predis\Protocol\Text;
 
-use Predis\CommunicationException;
+use Predis\Helpers;
 use Predis\Connection\ComposableConnectionInterface;
 use Predis\Protocol\ProtocolException;
 use Predis\Protocol\ResponseHandlerInterface;
@@ -108,6 +108,6 @@ class TextResponseReader implements ResponseReaderInterface
      */
     private function protocolError(ComposableConnectionInterface $connection, $message)
     {
-        CommunicationException::handle(new ProtocolException($connection, $message));
+        Helpers::onCommunicationException(new ProtocolException($connection, $message));
     }
 }

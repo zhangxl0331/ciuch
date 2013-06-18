@@ -11,7 +11,7 @@
 
 namespace Predis\Protocol\Text;
 
-use Predis\CommunicationException;
+use Predis\Helpers;
 use Predis\Connection\ComposableConnectionInterface;
 use Predis\Protocol\ProtocolException;
 use Predis\Protocol\ResponseHandlerInterface;
@@ -39,7 +39,7 @@ class ResponseIntegerHandler implements ResponseHandlerInterface
         }
 
         if ($number !== 'nil') {
-            CommunicationException::handle(new ProtocolException(
+            Helpers::onCommunicationException(new ProtocolException(
                 $connection, "Cannot parse '$number' as numeric response"
             ));
         }
