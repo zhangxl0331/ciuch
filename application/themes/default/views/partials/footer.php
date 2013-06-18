@@ -1,11 +1,12 @@
 {{ if not input:inajax }}
-
+	{{if not nosidebar }}
 		{{ if ad:contentbottom }}<br style="line-height:0;clear:both;"/><div id="ad_contentbottom">{{ad/contentbottom}}</div>{{ endif }}
 		</div>
 		
 		
 		<div id="bottom"></div>
 	</div>
+	{{ endif }}
 	
 
 	
