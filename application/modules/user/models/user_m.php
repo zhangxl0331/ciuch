@@ -1,6 +1,6 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 
-class User_m extends MY_Model
+class User_m extends CI_Model
 {	
 	protected $_db = '';
 	protected $_table = 'member';

@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Config_m extends MY_Model
+class Config_m extends CI_Model
 {	
 	protected $_table = 'config';
 	

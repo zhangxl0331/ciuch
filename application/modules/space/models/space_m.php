@@ -1,6 +1,6 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Space_m extends MY_Model
+class Space_m extends CI_Model
 {
 	protected $_table = 'space';
 	protected $_primary_key = 'uid';

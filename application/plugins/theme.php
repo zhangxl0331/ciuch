@@ -95,8 +95,8 @@ class Plugin_Theme extends Plugin
 		$title = $this->attribute('title');
 		$media = $this->attribute('media');
 		$type = $this->attribute('type', 'text/css');
-        $rel = $this->attribute('rel', 'stylesheet');
-        $theme = $this->attribute('theme');
+		$rel = $this->attribute('rel', 'stylesheet');
+		$theme = $this->attribute('theme');
 
 		return link_tag($this->css_url($file, $theme), $rel, $type, $title, $media);
 	}
