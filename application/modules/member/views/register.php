@@ -1,6 +1,3 @@
-<!--{eval $_TPL['nosidebar']=1;}-->
-<!--{template header}-->
-
 <script>
 	function register(show_id, result) {
 		if(result) {
@@ -28,8 +25,8 @@
 	</tr>
 	<!--{/if}-->
 	
-	<!--{if $_SCONFIG['seccode_register']}-->
-	<!--{if $_SCONFIG['questionmode']}-->
+	{{ if uch:config:seccode_register }}
+	{{ if uch:config:questionmode }}
 	<tr>
 		<th style="vertical-align: top;">请先回答问题</th>
 		<td>
@@ -37,7 +34,7 @@
 			<input type="text" id="seccode" name="seccode" value="" class="t_input" onBlur="checkSeccode()" tabindex="1" autocomplete="off" />&nbsp;<span id="checkseccode">&nbsp;</span>
 		</td>
 	</tr>
-	<!--{else}-->
+	{{ else }}
 	<tr>
 		<th style="vertical-align: top;">验证码</th>
 		<td>
@@ -46,8 +43,8 @@
 			<input type="text" id="seccode" name="seccode" value="" class="t_input" onBlur="checkSeccode()" tabindex="1" autocomplete="off" />&nbsp;<span id="checkseccode">&nbsp;</span>
 		</td>
 	</tr>
-	<!--{/if}-->
-	<!--{/if}-->
+	{{ endif }}
+	{{ endif }}
 	
 	<tr><th width="100">用户名</th><td><input type="text" id="username" name="username" value="" class="t_input" onBlur="checkUserName()" tabindex="2" />&nbsp;<span id="checkusername">&nbsp;</span></td></tr>
 	<tr>
@@ -272,5 +269,3 @@
 	}
 //-->
 </script>
-
-<!--{template footer}-->
