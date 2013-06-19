@@ -8,9 +8,13 @@ class Config_m extends MY_Model
 	{
 		parent::__construct();
 		
-		
-// 		$this->load->model('conf/data_m');
 		$this->load->driver('cache');
+	}
+	
+	public function checkclose()
+	{
+		$config = $this->config_cache();
+		
 	}
 	
 	public function config_cache($update=FALSE)
