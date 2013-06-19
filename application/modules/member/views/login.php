@@ -1,26 +1,68 @@
-<form id="loginform" name="loginform" action="{{ url:site }}member/{{ config:login_action }}?ref" method="post" class="c_form">
+<?=form_open('member'.$uch['config']['login_action'].'?ref', array('id'=>'loginform', 'name'=>'loginform', 'class'=>'c_from'))?>
 <table cellpadding="0" cellspacing="0" class="formtable">
 	<caption>
 		<h2>请登录</h2>
 		<p>如果您在本站已拥有帐号，请使用已有的帐号信息直接进行登录即可，不需重复注册。</p>
 	</caption>
-	<tbody>
-	<tr><th width="100"><label for="username">用户名</label></th><td><input type="text" name="username" id="username" class="t_input" value="$membername" tabindex="2" /></td></tr>
-	<tr><th width="100"><label for="password">密　码</label></th><td><input type="password" name="password" id="password" class="t_input" tabindex="3" value="$password" /></td></tr>
+	{{ noparser }}{{ if invitearr }}
+	<tr>
+		<th width="100">好友邀请</th>
+		<td>
+			<a href="space.php?$url_plus" target="_blank"><img src="<!--{avatar($invitearr[uid],small)}-->" alt="{$_SN[$invitearr[uid]]}" id="avatar" align="absmiddle" /></a>
+			<a href="space.php?$url_plus" target="_blank">{$_SN[$invitearr[uid]]}</a>
+		</td>
+	</tr>
+	{{ endif }}{{ /noparse }}
+	
+	{{ if uch:config:seccode_login }}
+	{{ noparser }}{{ if uch:global:input_seccode }}
 	<tr>
 		<th width="100">&nbsp;</th>
 		<td>
-			<input type="checkbox" id="cookietime" name="cookietime" value="315360000" $cookiecheck style="margin-bottom: -2px;"><label for="cookietime">下次自动登录</label>
+		请通过下面的验证后，再提交登录
+		</td>
+	</tr>
+	{{ endif }}{{ /noparse }}
+	{{ if uch:config:questionmode }}
+	<tr>
+		<th width="100" style="vertical-align: top;">请先回答问题</th>
+		<td>
+			<p><?=$spam['question']?></p>
+			<?=form_hidden('answer', $spam['answer'])?>
+			<input type="text" id="seccode" name="seccode" value="" tabindex="1" class="t_input" onBlur="checkSeccode()" />&nbsp;<span id="checkseccode">&nbsp;</span>
+		</td>
+	</tr>
+	{{ else }}
+	<tr>
+		<th width="100" style="vertical-align: top;">验证码</th>
+		<td>
+			<?=$captcha['image']?>
+			<?=form_hidden('word', $captcha['word'])?>
+			<?=form_hidden('time', $captcha['time'])?>
+			<p>请输入上面的字母或数字，看不清可<a href="javascript:updateseccode()">更换一张</a></p>
+			<input type="text" id="seccode" name="seccode" value="" tabindex="1" class="t_input" onBlur="checkSeccode()" />&nbsp;<span id="checkseccode">&nbsp;</span>
+		</td>
+	</tr>
+	{{ endif }}
+	{{ endif }}
+	<tbody style="display:<!--{if $_SGLOBAL['input_seccode']}-->none<!--{/if}-->;">
+	<tr><th width="100"><?=form_label('用户名', 'username')?></th><td><?=form_input(array('name'=>'username', 'id'=>'username', 'class'=>'t_input', 'value'=>set_value('username', $uch['data']['membername']), 'tabindex'=>2))?></td></tr>
+	<tr><th width="100"><?=form_label('密　码', 'password')?></th><td><?=form_password(array('name'=>'password', 'id'=>'password', 'class'=>'t_input', 'value'=>set_value('password', $uch['data']['password']), 'tabindex'=>3))?></td></tr>
+	<tr>
+		<th width="100">&nbsp;</th>
+		<td>
+			<?=form_checkbox(array('id'=>'cookietime', 'name'=>'cookietime', 'value'=>315360000, 'checked'=>$cookiecheck, 'style'=>'margin-bottom: -2px'))?><?=form_label('下次自动登录', 'cookietime')?>
 		</td>
 	</tr>
 	</tbody>
 	<tr><th width="100">&nbsp;</th><td>
-		<input type="hidden" name="refer" value="$refer" />
-		<input type="submit" id="loginsubmit" name="loginsubmit" value="登录" class="submit" tabindex="5" />
+		<?=form_hidden('refer', $refer)?>
+		<?=form_submit(array('id'=>'loginsubmit', 'name'=>'loginsubmit', 'value'=>'登录', 'class'=>'submit', 'tabindex'=>5))?>
 		<a href="do.php?ac=lostpasswd">忘记密码?</a>
 	</td></tr>
 </table>
-<input type="hidden" name="formhash" value="{{ global:formhash }}" /></form>
+<?=form_hidden('formhash', $formhash)?>
+<?=form_close()?>
 
 <script type="text/javascript">
 	var lastSecCode = '';

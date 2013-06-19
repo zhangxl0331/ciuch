@@ -42,6 +42,26 @@ class MY_Controller extends MX_Controller {
 		$this->space_m->checkauth();
 		
 // 		$this->getuserapp();
+
+		if($uch['config']['seccode_login'])
+		{
+			if($uch['config']['questionmode'])
+			{
+				$spams = $this->cache->get('spam');
+				$count = count($spams['question']);
+				$key = mt_rand(0, max(count($spams)-1, 0));
+				$spams['question'][$key];
+			}
+			else
+			{
+				$captcha = create_captcha(array(
+						'img_path' => APPPATH.'cache/captcha/',
+						'img_url' => base_url('application/cache/captcha/')
+				));
+				$this->load->vars('captcha', $captcha);
+			}			
+		}
+			
 		$this->load->vars(array('uch'=>$uch));
 		Events::trigger('checkclose');
 		

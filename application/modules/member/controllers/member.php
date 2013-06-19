@@ -50,6 +50,8 @@ class Member extends MY_Controller {
 						'rules' => 'required'
 				),
 		);
+		
+		
 			
 		// Set the validation rules
 		$this->form_validation->set_rules($validation);
