@@ -15,14 +15,12 @@
 	{{ endif }}{{ /noparse }}
 	
 	{{ if uch:config:seccode_login }}
-	{{ noparser }}{{ if uch:global:input_seccode }}
 	<tr>
 		<th width="100">&nbsp;</th>
 		<td>
 		请通过下面的验证后，再提交登录
 		</td>
 	</tr>
-	{{ endif }}{{ /noparse }}
 	{{ if uch:config:questionmode }}
 	<tr>
 		<th width="100" style="vertical-align: top;">请先回答问题</th>

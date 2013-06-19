@@ -48,9 +48,7 @@ class MY_Controller extends MX_Controller {
 			if($uch['config']['questionmode'])
 			{
 				$spams = $this->cache->get('spam');
-				$count = count($spams['question']);
-				$key = mt_rand(0, max(count($spams)-1, 0));
-				$spams['question'][$key];
+				$this->load->vars('spam', $spams[mt_rand(0, max(count($spams)-1, 0))]);
 			}
 			else
 			{
