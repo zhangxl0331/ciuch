@@ -44,7 +44,7 @@ class Events_Config
 
      
      
-     public function updatecache($data = array())
+     public function getcache($data = array())
      {
      	if(empty($data) || in_array('sconfig', $data))
      	{
