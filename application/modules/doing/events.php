@@ -4,10 +4,10 @@ class Events_Doing
     private $CI;
     private $module;
     
-//     public function __construct()
-//     {
-//         $this->CI = get_instance();      
-//         $this->CI->load->model('doing/doing_m');
+    public function __construct()
+    {
+        $this->CI =& get_instance();      
+        $this->CI->load->model('doing/doing_m');
         
 //         $this->module = 'doing';
 		
@@ -15,7 +15,7 @@ class Events_Doing
 //         Events::register('ckprivacy', array($this, 'ckprivacy'));
 //         Events::register('privacy_tab', array($this, 'privacy_tab'));
 //         Events::register('privacy_icon', array($this, 'privacy_icon'));
-//      }
+     }
 
 // 	public function ckprivacy($data = array())
 // 	{

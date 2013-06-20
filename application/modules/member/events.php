@@ -5,7 +5,7 @@ class Events_Member
     
 	public function __construct()
 	{
-		$this->CI = get_instance();       
+		$this->CI =& get_instance();       
 		$this->CI->load->model(array('member/member_m'));
 		// register the public_controller event when this file is autoloaded
 		Events::register('checkauth', array($this, 'checkauth'));

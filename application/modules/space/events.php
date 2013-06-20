@@ -5,7 +5,7 @@ class Events_Space
     
     public function __construct()
     {
-        $this->CI = get_instance();     
+        $this->CI =& get_instance();     
         $this->CI->load->model(array('space/space_m'));
         $this->module = 'space';
         
