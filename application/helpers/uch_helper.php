@@ -39,7 +39,7 @@
  */
 if ( ! function_exists('show_message'))
 {
-	function show_message($msgkey, $url_forward='', $second=1, $values=array()) 
+	function showmessage($msgkey, $url_forward='', $second=1, $values=array()) 
 	{				
 		$loader = &load_class('Loader', 'core');
 		$loader->vars(array('ad'=>''));

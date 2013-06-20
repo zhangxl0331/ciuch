@@ -1,11 +1,7 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Myhook {
+class Admin extends Admin_Controller {
 
-	public function __construct()
-	{
-		
-	}
 	/**
 	 * Index Page for this controller.
 	 *
@@ -21,24 +17,9 @@ class Myhook {
 	 * map to /index.php/welcome/<method_name>
 	 * @see http://codeigniter.com/user_guide/general/urls.html
 	 */
-	public function checkcache()
+	public function index()
 	{
-		Events::trigger('checkcache');
-	}
-	
-	public function checkauth()
-	{
-		Events::trigger('checkauth');
-	}
-	
-	public function checkclose()
-	{
-		Events::trigger('checkclose');
-	}
-	
-	public function getmember()
-	{
-		Events::trigger('getmember');
+		$this->load->view('welcome_message');
 	}
 }
 

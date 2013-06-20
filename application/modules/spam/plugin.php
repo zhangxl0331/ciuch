@@ -8,7 +8,7 @@
  * @author		PyroCMS Dev Team
  * @package		PyroCMS\Core\Plugins
  */
-class Plugin_Config extends Plugin
+class Plugin_Spam extends Plugin
 {
 
 	/**

@@ -1,27 +1,21 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
-class Events_Config
+class Events_Spam
 {
 	private $CI;
     
 	public function __construct()
 	{
 		$this->CI =& get_instance();       
-		$this->CI->load->model(array('config/config_m'));
+		$this->CI->load->model(array('spam/spam_m'));
         
 		// register the public_controller event when this file is autoloaded
 		Events::register('checkcache', array($this, 'checkcache'));
-		Events::register('checkclose', array($this, 'checkclose'), 10);
 	}
 	
 	public function checkcache($data = array())
 	{
-		$global['config'] = $this->CI->config_m->config_cache();
-		$this->CI->load->vars(array('global'=>$global));
-	}
-	
-	public function checkclose($data = array())
-	{
-		$this->CI->config_m->checkclose();
+		$spam = $this->CI->spam_m->spam_cache();
+		$this->CI->load->vars(array('spam'=>$spam));
 	}
 }
 /* End of file events.php */

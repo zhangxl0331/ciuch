@@ -1,16 +1,36 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Space_m extends MY_Model
-{
-	protected $_table = 'space';
-	protected $_primary_key = 'uid';
-	
+{	
 	public function __construct()
 	{
 		parent::__construct();
 	}
 	
+	public function updatelogin()
+	{
+		extract($this->load->get_var('global'));
+		if($auth['uid'] AND  ! isset($auth['lastactivity']))
+		{
+			$ips = explode('.', $this->input->ip_address());
+			for($i=0;$i<3;$i++) {
+				$ips[$i] = intval($ips[$i]);
+			}
+			$ip = sprintf('%03d%03d%03d', $ips[0], $ips[1], $ips[2]);
 	
+			$this->db->update('space', array('lastlogin'=>time(), 'ip' => $ip), array('uid'=>$auth['uid']));
+		}
+	}
+	
+	public function getmember()
+	{
+		extract($this->load->get_var('global'));
+		if($auth['uid'])
+		{
+			return $this->getspace($auth['uid']);
+		}
+		return array();
+	}
 
 	function getspace($key, $indextype='uid', $auto_open=1) 
 	{
@@ -75,19 +95,6 @@ class Space_m extends MY_Model
 			set_cookie('_refer', rawurlencode($_SERVER['REQUEST_URI']));
 			show_message('to_login', 'do.php?ac='.$uch['config']['login_action']);
 		}
-	}
-	
-	function getmember() {
-		$uch = $this->load->get_var('uch');
-	
-		if(empty($uch['member']) && $uch['supe_uid']) {
-			if($uch['space']['uid'] == $uch['supe_uid']) {
-				$uch['member'] = $uch['space'];
-			} else {
-				$uch['member'] = $this->getspace($uch['supe_uid']);
-			}
-		}
-		$this->load->vars('uch', $uch);
 	}
 	
 	function space_domain($space) {

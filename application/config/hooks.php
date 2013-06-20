@@ -10,11 +10,39 @@
 |
 */
 
+$hook['pre_controller'][] = array(
+	'class'    => 'Myhook',
+	'function' => 'checkcache',
+	'filename' => 'Myhook.php',
+	'filepath' => 'hooks'
+);
+
+$hook['pre_controller'][] = array(
+	'class'    => 'Myhook',
+	'function' => 'checkauth',
+	'filename' => 'Myhook.php',
+	'filepath' => 'hooks'
+);
+
+$hook['pre_controller'][] = array(
+		'class'    => 'Myhook',
+		'function' => 'checkclose',
+		'filename' => 'Myhook.php',
+		'filepath' => 'hooks'
+);
+
+$hook['pre_controller'][] = array(
+		'class'    => 'Myhook',
+		'function' => 'getmember',
+		'filename' => 'Myhook.php',
+		'filepath' => 'hooks'
+);
+
 // $hook['post_controller_constructor'][] = array(
-// 	'class'    => 'Myhook',
-// 	'function' => 'cache_read',
-// 	'filename' => 'Myhook.php',
-// 	'filepath' => 'hooks'
+// 		'class'    => 'Myhook',
+// 		'function' => 'checkauth',
+// 		'filename' => 'Myhook.php',
+// 		'filepath' => 'hooks'
 // );
 
 /* End of file hooks.php */

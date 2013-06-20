@@ -109,7 +109,7 @@ $autoload['language'] = array('source');
 |
 */
 
-$autoload['model'] = array('config/config_m', 'space/space_m');
+$autoload['model'] = array('config/config_m');
 
 
 /* End of file autoload.php */

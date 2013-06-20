@@ -6,8 +6,8 @@
 <meta http-equiv="x-ua-compatible" content="ie=7" />
 <title>
 {{ if template:title }}{{ template:title }} - {{ endif }}
-{{ if uch:space:realname }}{{ uch:space:username }} - {{ endif }}
-{{ uch:config:sitename }} - Powered by {{ uch:config:sitename }}
+{{ if global:space:realname }}{{ global:space:username }} - {{ endif }}
+{{ global:config:sitename }} - Powered by {{ global:config:sitename }}
 </title>
 {{ theme:js file="script_cookie.js" }}
 {{ theme:js file="script_common.js" }}
@@ -16,20 +16,20 @@
 {{ theme:js file="script_face.js" }}
 {{ theme:js file="script_manage.js" }}
 
-{{ if uch:space:theme }}
+{{ if global:space:theme }}
 {{ theme:css file="style.css" theme=default }}
-{{ theme:css file="style.css" theme=uch:space:theme }}
+{{ theme:css file="style.css" theme=global:space:theme }}
 {{ else }}
-{{ theme:css file="style.css" theme=uch:config:template }}
+{{ theme:css file="style.css" theme=global:config:template }}
 {{ endif }}
 <style type="text/css">
-{{ if uch:space:css }}
-{{ uch:space:css }}
+{{ if global:space:css }}
+{{ global:space:css }}
 {{ endif }}
 </style>
 
 {{ theme:favicon file="favicon.ico" }}
-<link rel="edituri" type="application/rsd+xml" title="rsd" href="xmlrpc.php?rsd={{ uch:space:uid }}" />
+<link rel="edituri" type="application/rsd+xml" title="rsd" href="xmlrpc.php?rsd={{ global:space:uid }}" />
 </head>
 <body>
 
@@ -39,7 +39,7 @@
 <div id="header">
 	{{ if ad:header }}<div id="ad_header">{{ad/header}}</div>{{ endif }}
 	<div class="headerwarp">
-		<h1 class="logo"><a href="index.php"><img src="{{ uch:config:sitelogo }}" alt="{{ uch:config:sitename }}" /></a></h1>
+		<h1 class="logo"><a href="index.php"><img src="{{ global:config:sitelogo }}" alt="{{ global:config:sitename }}" /></a></h1>
 		<ul class="menu">
 		{{ if sglobal:supe_uid }}
 			<li><a href="space.php?do=home">首页</a></li>
@@ -52,8 +52,8 @@
 			<li><a href="network.php">随便看看</a></li>
 		
 		{{ if sglobal:supe_uid }}
-			<li><a href="space.php?do=pm{{ if uch:space:newpm }}&filter=newpm{{ endif }}">消息{{ if uch:space:newpm }}(新){{ endif }}</a></li>
-			{{if uch:space:notenum }}<li class="notify"><a href="space.php?do=notice">{{ uch:space:notenum }}条新通知</a></li>{{ endif }}
+			<li><a href="space.php?do=pm{{ if global:space:newpm }}&filter=newpm{{ endif }}">消息{{ if global:space:newpm }}(新){{ endif }}</a></li>
+			{{if global:space:notenum }}<li class="notify"><a href="space.php?do=notice">{{ global:space:notenum }}条新通知</a></li>{{ endif }}
 		{{ else }}
 			<li><a href="help.php">帮助</a></li>
 		{{ endif }}
@@ -61,16 +61,16 @@
 	
 		<div class="nav_account">
 		{{ if sglobal:supe_uid }}
-			<a href="{{ url:site }}space/uid-{{ sglobal:supe_uid }}.html" class="login_thumb"><img src="{{avatar(sglobal[supe_uid],small)}}" alt="{{ uch:space:realname }}" width="20" height="20" /></a>
-			<a href="{{ url:site }}space/uid-{{ sglobal:supe_uid }}.html" class="loginName">{{ uch:space:realname }}</a>
-			{{if uch:space:realname != member:username }}({{ member:username }}){{endif}}
+			<a href="{{ url:site }}space/uid-{{ sglobal:supe_uid }}.html" class="login_thumb"><img src="{{avatar(sglobal[supe_uid],small)}}" alt="{{ global:space:realname }}" width="20" height="20" /></a>
+			<a href="{{ url:site }}space/uid-{{ sglobal:supe_uid }}.html" class="loginName">{{ global:space:realname }}</a>
+			{{if global:space:realname != member:username }}({{ member:username }}){{endif}}
 			<br />
-			{{if not uch:config:closeinvite }}<a href="cp.php?ac=invite">邀请</a> | {{ endif }}<a href="cp.php">设置</a> | <a href="cp.php?ac=privacy">隐私</a> | <a href="cp.php?ac=common&op=logout">退出</a>
+			{{if not global:config:closeinvite }}<a href="cp.php?ac=invite">邀请</a> | {{ endif }}<a href="cp.php">设置</a> | <a href="cp.php?ac=privacy">隐私</a> | <a href="cp.php?ac=common&op=logout">退出</a>
 		{{ else }}
-			<a href="{{ url:site }}member/{{ uch:config:register_action }}" class="login_thumb"><img src="{{avatar(sglobal:supe_uid,small)}}" width="20" height="20" /></a>
+			<a href="{{ url:site }}member/{{ global:config:register_action }}" class="login_thumb"><img src="{{avatar(sglobal:supe_uid,small)}}" width="20" height="20" /></a>
 			欢迎您<br>
-			<a href="{{ url:site }}member/{{ uch:config:login_action }}">登录</a> | 
-			<a href="{{ url:site }}member/{{ uch:config:register_action }}">注册</a>
+			<a href="{{ url:site }}member/{{ global:config:login_action }}">登录</a> | 
+			<a href="{{ url:site }}member/{{ global:config:register_action }}">注册</a>
 		{{ endif }}
 		</div>
 	</div>
@@ -89,15 +89,15 @@
 				<li><img src="image/app/mtag.gif"><a href="space.php?do=thread">群组</a><em><a href="cp.php?ac=thread">话题</a></em></li>
 				<li><img src="image/app/share.gif"><a href="space.php?do=share">分享</a></li>
 				
-			{{ if uch:config:my_status }}
+			{{ if global:config:my_status }}
 				{{ userapp:default_menu }}
 				<li><img src="http://appicon.manyou.com/icons/{{ appid }}"><a href="userapp.php?id={{ appid }}">{{ appname }}</a></li>
 				{{ /userapp:default_menu }}
 			{{ endif }}
 			</ul>
 			
-			{{ if uch:config:my_status }}
-			{{ userapp:my_menu uid=uch:space:uid limit=uch:space:menunum }}
+			{{ if global:config:my_status }}
+			{{ userapp:my_menu uid=global:space:uid limit=global:space:menunum }}
 			<ul class="app_list" id="my_userapp">
 				{{ my_menu }}
 				<li id="userapp_li_{{ appid }}"><img src="http://appicon.manyou.com/icons/{{ appid }}"><a href="userapp.php?id={{ appid }}" title="{{ appname }}">{{ appname }}</a></li>
@@ -119,7 +119,7 @@
 		
 		{{ else }}
 			<div class="bar_text">
-				<form id="loginform" name="loginform" action="do.php?ac={{ uch:config:login_action }}&ref" method="post">
+				<form id="loginform" name="loginform" action="do.php?ac={{ global:config:login_action }}&ref" method="post">
 				<input type="hidden" name="formhash" value="" />
 					<p class="title">登录站点</p>
 					<p>用户名</p>
@@ -129,7 +129,7 @@
 					<p><input type="checkbox" id="cookietime" name="cookietime" value="315360000" checked /><label for="cookietime">记住我</label></p>
 					<p>
 						<input type="submit" id="loginsubmit" name="loginsubmit" value="登录" class="submit"  />
-						<a href="{{ url:site }}member/{{ uch:config:register_action }}" class="button">注册</a>
+						<a href="{{ url:site }}member/{{ global:config:register_action }}" class="button">注册</a>
 					</p>
 				</form>
 			</div>

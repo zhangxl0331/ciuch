@@ -30,13 +30,13 @@
 		{{ endif }}
 		
 		<p>
-			{{ uch:sconfig:sitename }} - 
-			<a href="mailto:{{ uch:sconfig:adminemail }}">联系我们</a>
-			{{ if uch:sconfig:miibeian }} - <a  href="http://www.miibeian.gov.cn" target="_blank">{{ uch:sconfig:miibeian }}</a>{{ endif }}
+			{{ global:config:sitename }} - 
+			<a href="mailto:{{ global:config:adminemail }}">联系我们</a>
+			{{ if global:config:miibeian }} - <a  href="http://www.miibeian.gov.cn" target="_blank">{{ global:config:miibeian }}</a>{{ endif }}
 		</p>
 		<p>
 			Powered by <a href="http://u.discuz.net" target="_blank"><strong>UCenter Home</strong></a> <span title="{{X_RELEASE;}}">X_VER</span>
-			{{ if uch:sconfig:licensed }}<a  href="http://license.comsenz.com/?pid=7&host=$_SERVER[HTTP_HOST]" target="_blank">Licensed</a>{{ endif }}
+			{{ if global:config:licensed }}<a  href="http://license.comsenz.com/?pid=7&host=$_SERVER[HTTP_HOST]" target="_blank">Licensed</a>{{ endif }}
 			&copy; 2001-2009 <a  href="http://www.comsenz.com" target="_blank">Comsenz Inc.</a>
 		</p>
 	</div>

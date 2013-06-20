@@ -2,19 +2,11 @@
 
 class Config_m extends MY_Model
 {	
-	protected $_table = 'config';
-	
 	public function __construct()
 	{
 		parent::__construct();
 		
 		$this->load->driver('cache');
-	}
-	
-	public function checkclose()
-	{
-		$config = $this->config_cache();
-		
 	}
 	
 	public function config_cache($update=FALSE)
@@ -67,18 +59,34 @@ class Config_m extends MY_Model
 		return $config;
 	}
 	
-	public function spam_cache($update=FALSE)
+	public function checkclose()
 	{
-		$spam = $this->cache->get('spam');
-		
-		if( ! $spam || $update)
+		extract($this->load->get_var('global'));
+		if(isset($config['close']) AND $config['close']) 
 		{
-			$row = $this->db->where('var', 'spam')->get('data')->row_array();
-			$spam = empty($row['datavalue'])?array():unserialize($row['datavalue']);		
-		
-			$this->cache->save('spam', $spam);
+			if(empty($config['closereason'])) 
+			{
+				showmessage('site_temporarily_closed');
+			} 
+			else 
+			{
+				showmessage($config['closereason']);
+			}
 		}
 		
-		return $spam;
+		if((isset($config['ipaccess']) AND !$this->ipaccess($config['ipaccess'])) OR (isset($config['ipbanned']) AND $this->ipbanned($config['ipbanned']))) 
+		{
+			showmessage('ip_is_not_allowed_to_visit');
+		}
+	}
+	
+	//ip��������
+	function ipaccess($ipaccess) {
+		return empty($ipaccess)?true:preg_match("/^(".str_replace(array("\r\n", ' '), array('|', ''), preg_quote($ipaccess, '/')).")/", $this->input->ip_address());
+	}
+	
+	//ip���ʽ�ֹ
+	function ipbanned($ipbanned) {
+		return empty($ipbanned)?false:preg_match("/^(".str_replace(array("\r\n", ' '), array('|', ''), preg_quote($ipbanned, '/')).")/", $this->input->ip_address());
 	}
 }
