@@ -10,7 +10,12 @@
 |
 */
 
-
+// $hook['post_controller_constructor'][] = array(
+// 	'class'    => 'Myhook',
+// 	'function' => 'cache_read',
+// 	'filename' => 'Myhook.php',
+// 	'filepath' => 'hooks'
+// );
 
 /* End of file hooks.php */
 /* Location: ./application/config/hooks.php */
