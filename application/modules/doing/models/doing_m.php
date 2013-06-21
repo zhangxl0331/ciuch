@@ -1,10 +1,18 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Doing_m extends MY_Model
-{
-	protected $_table = 'blog';
-	protected $_primary_key = 'blogid';
+{	
+	public function __construct()
+	{
+		parent::__construct();
+	}
 	
+	public function get_blog_count($where)
+	{
+		return $this->db
+		->where($where)
+		->count_all_results('doing');;
+	}
 	
 	public function get_blog_list($where, $orderby='blog.dateline DESC', $offset=0, $length=10)
 	{
@@ -14,8 +22,8 @@ class Doing_m extends MY_Model
 		->where($where)
 		->order_by($orderby)
 		->limit($length, $offset)
-		->get($this->_table)
-		->result();
+		->get('doing')
+		->result_array();
 	}
 
 }

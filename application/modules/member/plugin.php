@@ -12,10 +12,9 @@ class Plugin_Member extends Plugin
 {
 	public function __construct()
 	{
-		$this->load->library(
+		$this->load->model(
 			array(
-				'config/config_l',
-				'member/member_l',
+				'member/member_m',
 			)
 		);
 	}
@@ -39,6 +38,20 @@ class Plugin_Member extends Plugin
 		$uid = $this->attribute('uid', $this->input->get('uid'));
 		$size = $this->attribute('type', 'middle');
 		
-		return $this->member_l->avatar($uid, $size);
+		return $this->member_m->avatar($uid, $size);
+	}
+	
+	public function tabs()
+	{
+		$uid = $this->attribute('uid');
+		$tabs = Events::trigger('privacy_tab', array('uid'=>$uid), 'array');
+		return implode("\n", $tabs);
+	}
+	
+	public function icons()
+	{
+		$uid = $this->attribute('uid');
+		$icons = Events::trigger('privacy_icon', array('uid'=>$uid), 'array');
+		return implode("\n", $icons);
 	}
 }

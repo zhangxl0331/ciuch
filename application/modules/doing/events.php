@@ -9,11 +9,11 @@ class Events_Doing
         $this->CI =& get_instance();      
         $this->CI->load->model('doing/doing_m');
         
-//         $this->module = 'doing';
+        $this->module = 'doing';
 		
 //         // register the public_controller event when this file is autoloaded
 //         Events::register('ckprivacy', array($this, 'ckprivacy'));
-//         Events::register('privacy_tab', array($this, 'privacy_tab'));
+        Events::register('privacy_tab', array($this, 'privacy_tab'));
 //         Events::register('privacy_icon', array($this, 'privacy_icon'));
      }
 
@@ -29,31 +29,31 @@ class Events_Doing
 //      	return FALSE;
 // 	}
      
-// 	// this will be triggered by the Events::trigger('public_controller') code in Public_Controller.php
-//     public function privacy_tab($data = array())
-//     {
-//     	extract($data);
-//     	$uid = empty($uid)?0:$uid;
-//     	if(empty($module) OR in_array($this->module, (array)$module))
-//     	{
-//     		$triggers = Events::trigger('ckprivacy', array('module'=>$this->module, 'uid'=>$uid), 'array');
-//     		$flag = true;
-//     		foreach($triggers as $key=>$value)
-//     		{
-//     			if(preg_match('/Events_'.ucfirst($this->module).'::.*/', $key))
-//     			{
-//     				$flag = $value;
-//     			}
-//     			break;
-//     		}
-//     		if($flag)
-//     		{
-//     			return $this->CI->parser->parser_callback('theme:partial', array('module'=>$this->module, 'name'=>'tab'), '');
-//     		}
-//     	}
+	// this will be triggered by the Events::trigger('public_controller') code in Public_Controller.php
+    public function privacy_tab($data = array())
+    {
+    	extract($data);
+    	$uid = empty($uid)?0:$uid;
+    	if(empty($module) OR in_array($this->module, (array)$module))
+    	{
+    		$triggers = Events::trigger('ckprivacy', array('module'=>$this->module, 'uid'=>$uid), 'array');
+    		$flag = true;
+    		foreach($triggers as $key=>$value)
+    		{
+    			if(preg_match('/Events_'.ucfirst($this->module).'::.*/', $key))
+    			{
+    				$flag = $value;
+    			}
+    			break;
+    		}
+    		if($flag)
+    		{
+    			return $this->CI->parser->parser_callback('theme:partial', array('module'=>$this->module, 'name'=>'tab'), '');
+    		}
+    	}
     		
-// 		return FALSE;
-//     }
+		return FALSE;
+    }
     
     
 //     public function privacy_icon($data = array())

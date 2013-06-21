@@ -21,21 +21,9 @@ class Doing extends Space_Controller {
 		$count = 0;
 		
 // 		$f_index = '';
-		if($_GET['view'] == 'all') {
-			
-			$count = $this->doing_m->db->count_all_results('doing');
-			$list = $this->doing_m->db->order_by('dateline DESC')->get('doing', $perpage, $start)->result_array();
-			
-		} elseif($_GET['view'] == 'me') {
-			
-			$count = $this->doing_m->db->where('uid', $uch['space']['uid'])->count_all_results('doing');
-			$list = $this->doing_m->db->where('uid', $uch['space']['uid'])->order_by('dateline DESC')->get('doing', $perpage, $start)->result_array();
-			
-		} else {
-			
-			$count = $this->doing_m->db->where_in('uid', $uch['space']['feedfriend'])->count_all_results('doing');
-			$list = $this->doing_m->db->where_in('uid', $uch['space']['feedfriend'])->order_by('dateline DESC')->get('doing', $perpage, $start)->result_array();
-		}
+
+		$count = $this->doing_m->db->where('uid', $_GET['uid'])->count_all_results('doing');
+		$list = $this->doing_m->db->where('uid', $_GET['uid'])->order_by('dateline DESC')->get('doing', $perpage, $start)->result_array();
 		
 		
 		
@@ -125,7 +113,7 @@ class Doing extends Space_Controller {
 		$uch['doing']['list'] = $list;
 		$uch['mood']['list'] = $moodlist;
 		$this->load->vars('uch', $uch);
-		$this->template->build('doing');
+		$this->template->build('index');
 	}
 	
 	public function cp()

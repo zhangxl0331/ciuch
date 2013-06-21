@@ -41,7 +41,7 @@
 	<div class="headerwarp">
 		<h1 class="logo"><a href="index.php"><img src="{{ global:config:sitelogo }}" alt="{{ global:config:sitename }}" /></a></h1>
 		<ul class="menu">
-		{{ if sglobal:supe_uid }}
+		{{ if global:auth:uid }}
 			<li><a href="space.php?do=home">首页</a></li>
 			<li><a href="space.php">个人主页</a></li>
 			<li><a href="space.php?do=friend">好友</a></li>
@@ -51,7 +51,7 @@
 		
 			<li><a href="network.php">随便看看</a></li>
 		
-		{{ if sglobal:supe_uid }}
+		{{ if global:auth:uid }}
 			<li><a href="space.php?do=pm{{ if global:space:newpm }}&filter=newpm{{ endif }}">消息{{ if global:space:newpm }}(新){{ endif }}</a></li>
 			{{if global:space:notenum }}<li class="notify"><a href="space.php?do=notice">{{ global:space:notenum }}条新通知</a></li>{{ endif }}
 		{{ else }}
@@ -60,14 +60,14 @@
 		</ul>
 	
 		<div class="nav_account">
-		{{ if sglobal:supe_uid }}
-			<a href="{{ url:site }}space/uid-{{ sglobal:supe_uid }}.html" class="login_thumb"><img src="{{avatar(sglobal[supe_uid],small)}}" alt="{{ global:space:realname }}" width="20" height="20" /></a>
-			<a href="{{ url:site }}space/uid-{{ sglobal:supe_uid }}.html" class="loginName">{{ global:space:realname }}</a>
+		{{ if global:auth:uid }}
+			<a href="{{ url:site }}space/uid-{{ global:auth:uid }}.html" class="login_thumb"><img src="{{avatar(sglobal[supe_uid],small)}}" alt="{{ global:space:realname }}" width="20" height="20" /></a>
+			<a href="{{ url:site }}space/uid-{{ global:auth:uid }}.html" class="loginName">{{ global:space:realname }}</a>
 			{{if global:space:realname != member:username }}({{ member:username }}){{endif}}
 			<br />
 			{{if not global:config:closeinvite }}<a href="cp.php?ac=invite">邀请</a> | {{ endif }}<a href="cp.php">设置</a> | <a href="cp.php?ac=privacy">隐私</a> | <a href="cp.php?ac=common&op=logout">退出</a>
 		{{ else }}
-			<a href="{{ url:site }}member/{{ global:config:register_action }}" class="login_thumb"><img src="{{avatar(sglobal:supe_uid,small)}}" width="20" height="20" /></a>
+			<a href="{{ url:site }}member/{{ global:config:register_action }}" class="login_thumb"><img src="{{avatar(global:auth:uid,small)}}" width="20" height="20" /></a>
 			欢迎您<br>
 			<a href="{{ url:site }}member/{{ global:config:login_action }}">登录</a> | 
 			<a href="{{ url:site }}member/{{ global:config:register_action }}">注册</a>
@@ -81,7 +81,7 @@
 	{{if not nosidebar }}
 	<div id="main">
 		<div id="app_sidebar">
-		{{ if sglobal:supe_uid }}
+		{{ if global:auth:uid }}
 			<ul class="app_list" id="default_userapp">
 				<li><img src="image/app/doing.gif"><a href="space.php?do=doing">记录</a></li>
 				<li><img src="image/app/album.gif"><a href="space.php?do=album">相册</a><em><a href="cp.php?ac=upload">上传</a></em></li>

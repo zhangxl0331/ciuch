@@ -16,30 +16,7 @@ class Plugin_Theme extends Plugin
 	public function __construct()
 	{
 		$this->load->helper('html');
-		$this->load->library('template');
-		$theme = $this->attribute('theme') ? $this->attribute('theme') : basename($this->template->get_theme_path());
-		if($theme)
-		{
-			foreach ($this->template->theme_locations() as $location)
-			{
-				$this->viewpaths[] = $location.$theme.'/views/';
-			}
-		}		
-
-		if (method_exists( $this->router, 'fetch_module' ))
-		{
-			$module = $this->attribute('module')?$this->attribute('module'):$this->router->fetch_module();
-			foreach (Modules::$locations as $location => $offset)
-			{
-				$this->viewpaths[] = $location.$module.'/views/';
-			}
-		}
-
-		// So there are no module views
-		foreach($this->load->get_package_paths() as $path)
-		{
-			$this->viewpaths[] = $path.'views/';
-		}
+		$this->load->library('template');	
 	}
 	/**
 	 * Partial
@@ -57,8 +34,14 @@ class Plugin_Theme extends Plugin
 		$module = $this->attribute('module');
 		$view = 'partials/'.$name;
 		$data = $this->load->get_vars();
-		
-		return $this->template->_find_view($view, $data, TRUE);
+		if ($module)
+		{
+			return $this->module_view($module, $view, $data);
+		}
+		else 
+		{
+			return $this->template->_find_view($view, $data, TRUE);
+		}		
 	}
 	
 	public function get_filepath($file, $type)
@@ -68,12 +51,9 @@ class Plugin_Theme extends Plugin
 			return $file;
 		}
 		
-		foreach($this->viewpaths as $viewpath)
+		if(file_exists($filepath = $this->load->get_var('template_views').$type.'/'. $file))
 		{
-			if(file_exists($filepath = $viewpath.$type.'/'. $file))
-			{
-				return $filepath;
-			}
+			return $filepath;
 		}
 		
 		return FALSE;
@@ -95,8 +75,8 @@ class Plugin_Theme extends Plugin
 		$title = $this->attribute('title');
 		$media = $this->attribute('media');
 		$type = $this->attribute('type', 'text/css');
-        $rel = $this->attribute('rel', 'stylesheet');
-        $theme = $this->attribute('theme');
+		$rel = $this->attribute('rel', 'stylesheet');
+		$theme = $this->attribute('theme');
 
 		return link_tag($this->css_url($file, $theme), $rel, $type, $title, $media);
 	}

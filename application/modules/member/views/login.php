@@ -14,14 +14,14 @@
 	</tr>
 	{{ endif }}{{ /noparse }}
 	
-	{{ if uch:config:seccode_login }}
+	{{ if global:config:seccode_login }}
 	<tr>
 		<th width="100">&nbsp;</th>
 		<td>
 		请通过下面的验证后，再提交登录
 		</td>
 	</tr>
-	{{ if uch:config:questionmode }}
+	{{ if global:config:questionmode }}
 	<tr>
 		<th width="100" style="vertical-align: top;">请先回答问题</th>
 		<td>
@@ -59,7 +59,6 @@
 		<a href="do.php?ac=lostpasswd">忘记密码?</a>
 	</td></tr>
 </table>
-<?=form_hidden('formhash', $formhash)?>
 <?=form_close()?>
 
 <script type="text/javascript">

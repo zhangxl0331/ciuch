@@ -39,7 +39,6 @@ class Member_l
 	{
 		$this->CI->load->model(array(
 				'member/member_m',
-				'member/session_m',		
 		));
 		$this->CI->load->helper(array('cookie', 'date', 'global'));
 		

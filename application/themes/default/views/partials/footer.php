@@ -42,7 +42,7 @@
 	</div>
 </div>
 
-{{ if sglobal:supe_uid }}
+{{ if global:auth:uid }}
 {{ if not cookie:checkpm }}
 <script language="javascript"  type="text/javascript" src="cp.php?ac=pm&op=checknewpm&rand={{ date:timestamp }}"></script>
 {{ endif }}
