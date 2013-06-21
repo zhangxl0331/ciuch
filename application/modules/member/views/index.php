@@ -35,7 +35,7 @@
 		
 			</ul>
 
-			{{ theme:partial name="icons" module="space" }}
+			{{ noparse }}{{ theme:partial name="icons" module="space" }}{{ /noparse }}
 			
 			{{ theme:partial name="space_list" module="doing" }}			
 			

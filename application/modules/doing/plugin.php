@@ -36,15 +36,15 @@ class Plugin_Doing extends Plugin
 	
 	public function ckprivacy()
 	{
-		return $this->space_m->ckprivacy('doing');
+		return $this->member_m->ckprivacy('doing');
 	}
 	
 	public function getcount()
 	{
 		$uch = $this->load->get_var('uch');
-		$uid = intval($this->attribute('uid', $uch['space']['uid']));
+		$uid = intval($this->attribute('uid'));
 		$view = $this->attribute('view', $this->input->get('view'));
-		$space = $this->space_m->getspace($uid);
+		$space = $this->member_m->getspace($uid);
 		if($view == 'all')
 		{
 			return $this->doing_m->db->count_all_results('doing');
@@ -67,7 +67,7 @@ class Plugin_Doing extends Plugin
 		$uch = $this->load->get_var('uch');
 		$uid = intval($this->attribute('uid', $uch['space']['uid']));
 		$view = $this->attribute('view', $this->input->get('view'));
-		$space = $this->space_m->getspace($uid);
+		$space = $this->member_m->getspace($uid);
 		$orderby = $this->attribute('orderby', 'dateline DESC');
 		$limit = $this->attribute('limit', 5);
 		$offset = $this->attribute('offset', 0);

@@ -67,7 +67,7 @@ class Member_m extends MY_Model
 	{
 		$config = $this->load->get_var('config');	
 		$var = "space_{$key}_{$indextype}";
-		$space = $this->load->get_var($var);
+		$space = $this->cache->get($var);
 		if(empty($space)) {
 			$space = $this->db->select('sf.*, s.*')->from('space s')->join('spacefield sf', 'sf.uid=s.uid', 'LEFT')->where("s.{$indextype}", $key)->get()->row_array();
 // 			if(!$space) {
@@ -110,7 +110,6 @@ class Member_m extends MY_Model
 			else {
 				return FALSE;
 			}
-			$this->load->vars($var, $space);
 		}
 		return $space;
 	}

@@ -5,6 +5,7 @@ class Member extends MY_Controller {
 	function __construct()
 	{
 		parent::__construct();
+		$this->load->model('member/member_m');
 	}
 	/**
 	 * Index Page for this controller.
@@ -14,7 +15,7 @@ class Member extends MY_Controller {
 	{
 		if($auth = $this->load->get_var('auth')) 
 		{
-			showmessage('do_success', 'space.php', 0);
+			redirect(site_url('member/index/'.$auth['uid']));
 		}
 
 		$username = trim($this->input->get_post('username'));
@@ -51,7 +52,7 @@ class Member extends MY_Controller {
 
 // 			$this->member_m->insertsession($setarr);
 			
-			set_cookie('auth', authcode("$setarr[uid]", 'ENCODE'), $cookietime);
+			set_cookie('auth', authcode($setarr['uid'], 'ENCODE'), $cookietime);
 			set_cookie('loginuser', $setarr['username'], 31536000);
 			set_cookie('_refer', '');
 			$this->load->helper('url');
@@ -100,7 +101,7 @@ class Member extends MY_Controller {
 		
 		if (is_callable(array($this, $ac)))
 		{
-			call_user_func(array($this, $ac), $params);
+			call_user_func_array(array($this, $ac), $params);
 		}
 	}
 	
@@ -139,7 +140,7 @@ class Member extends MY_Controller {
 	
 		// 		$uch['today'] = strtotime(sgmdate('Y-m-d'));
 	
-		// 		if(empty($_GET['view']) && $uch['space']['self'] && ($uch['space']['friendnum']<$_SCONFIG['showallfriendnum'])) {
+		// 		if(empty($_GET['view']) && $user['self'] && ($user['friendnum']<$_SCONFIG['showallfriendnum'])) {
 		// 			$_GET['view'] = 'all';//Ĭ����ʾȫվ
 		// 		}
 	
@@ -150,17 +151,17 @@ class Member extends MY_Controller {
 		// 		$notime = 0;
 		// 		if($_GET['view'] == 'all') {
 		// 			$wheresql = "friend='0'";//û����˽
-		// 			$theurl = "space.php?uid=$uch['space'][uid]&do=$do&view=all";
+		// 			$theurl = "space.php?uid=$user[uid]&do=$do&view=all";
 		// 			$f_index = '';
 		// 		} else {
-		// 			if(empty($uch['space']['feedfriend'])) {
-		// 				$wheresql = "uid='$uch['space'][uid]'";
-		// 				$theurl = "space.php?uid=$uch['space'][uid]&do=$do&view=me";
+		// 			if(empty($user['feedfriend'])) {
+		// 				$wheresql = "uid='$user[uid]'";
+		// 				$theurl = "space.php?uid=$user[uid]&do=$do&view=me";
 		// 				$f_index = '';
 		// 				$_GET['view'] = 'me';
 		// 			} else {
-		// 				$wheresql = "uid IN ('0',$uch['space'][feedfriend])";
-		// 				$theurl = "space.php?uid=$uch['space'][uid]&do=$do&view=we";
+		// 				$wheresql = "uid IN ('0',$user[feedfriend])";
+		// 				$theurl = "space.php?uid=$user[uid]&do=$do&view=we";
 		// 				$f_index = 'USE INDEX(dateline)';
 		// 				$_GET['view'] = 'we';
 		// 				$notime = 1;
@@ -188,7 +189,7 @@ class Member extends MY_Controller {
 		// 				WHERE $wheresql
 		// 				ORDER BY dateline DESC
 		// 				LIMIT $start,$perpage");
-		// 		if(empty($uch['space']['feedfriend'])) {
+		// 		if(empty($user['feedfriend'])) {
 		// 			//���˶�̬
 		// 			while ($value = $_SGLOBAL['db']->fetch_array($query)) {
 		// 				if(ckfriend($value) && ckicon_uid($value)) {
@@ -202,7 +203,7 @@ class Member extends MY_Controller {
 		// 			$multi = smulti($start, $perpage, $count, $theurl);
 		// 		} else {
 		// 			//���Ѷ�̬
-		// 			$uch['space']['filter_icon'] = empty($uch['space']['privacy']['filter_icon'])?array():array_keys($uch['space']['privacy']['filter_icon']);
+		// 			$user['filter_icon'] = empty($user['privacy']['filter_icon'])?array():array_keys($user['privacy']['filter_icon']);
 		// 			while ($value = $_SGLOBAL['db']->fetch_array($query)) {
 		// 				if(empty($feed_list[$value['hash_data']][$value['uid']])) {
 		// 					if(ckfriend($value) && ckicon_uid($value)) {
@@ -217,17 +218,17 @@ class Member extends MY_Controller {
 		// 		$olfriendlist = $visitorlist = $task = $ols = $birthlist = $myapp = array();
 		// 		$namestatus = $addfriendcount = $mtaginvitecount = $myinvitecount = $pokecount = $newreport = 0;
 	
-		// 		if($uch['space']['self'] && empty($start)) {
+		// 		if($user['self'] && empty($start)) {
 	
 		// 			//��������
-		// 			$addfriendcount = getcount('friend', array('fuid'=>$uch['space']['uid'], 'status'=>0));
+		// 			$addfriendcount = getcount('friend', array('fuid'=>$user['uid'], 'status'=>0));
 	
 		// 			//Ⱥ������
-		// 			$mtaginvitecount = getcount('mtaginvite', array('uid'=>$uch['space']['uid']));
+		// 			$mtaginvitecount = getcount('mtaginvite', array('uid'=>$user['uid']));
 	
 		// 			//Ӧ������
 		// 			if($_SCONFIG['my_status']) {
-		// 				$myinvitecount = getcount('myinvite', array('touid'=>$uch['space']['uid']));
+		// 				$myinvitecount = getcount('myinvite', array('touid'=>$user['uid']));
 		// 			}
 	
 		// 			//�ٱ�����
@@ -240,11 +241,11 @@ class Member extends MY_Controller {
 		// 				$namestatus = $_SGLOBAL['db']->result($_SGLOBAL['db']->query("SELECT COUNT(*) FROM ".tname('space')." WHERE namestatus='0' AND name!=''"), 0);
 		// 			}
 		// 			//���к�
-		// 			$pokecount = getcount('poke', array('uid'=>$uch['space']['uid']));
+		// 			$pokecount = getcount('poke', array('uid'=>$user['uid']));
 	
 		// 			//���ÿ��б�
 		// 			$oluids = array();
-		// 			$query = $_SGLOBAL['db']->query("SELECT * FROM ".tname('visitor')." WHERE uid='$uch['space'][uid]' ORDER BY dateline DESC LIMIT 0,15");
+		// 			$query = $_SGLOBAL['db']->query("SELECT * FROM ".tname('visitor')." WHERE uid='$user[uid]' ORDER BY dateline DESC LIMIT 0,15");
 		// 			while ($value = $_SGLOBAL['db']->fetch_array($query)) {
 		// 				realname_set($value['vuid'], $value['vusername']);
 		// 				$visitorlist[] = $value;
@@ -259,9 +260,9 @@ class Member extends MY_Controller {
 		// 			}
 	
 		// 			$oluids = array();
-		// 			if($uch['space']['feedfriend']) {
+		// 			if($user['feedfriend']) {
 		// 				//���ߺ���
-		// 				$query = $_SGLOBAL['db']->query("SELECT * FROM ".tname('session')." WHERE uid IN ($uch['space'][feedfriend]) ORDER BY lastactivity DESC LIMIT 0,15");
+		// 				$query = $_SGLOBAL['db']->query("SELECT * FROM ".tname('session')." WHERE uid IN ($user[feedfriend]) ORDER BY lastactivity DESC LIMIT 0,15");
 		// 				while ($value = $_SGLOBAL['db']->fetch_array($query)) {
 		// 					realname_set($value['uid'], $value['username']);
 		// 					$value['isonline'] = 1;
@@ -273,7 +274,7 @@ class Member extends MY_Controller {
 		// 				//�ҵĺ���
 		// 				$limit = 15 - count($olfriendlist);
 		// 				$whereplus = $oluids?" AND fuid NOT IN (".simplode($oluids).")":'';
-		// 				$query = $_SGLOBAL['db']->query("SELECT fuid AS uid, fusername AS username, num FROM ".tname('friend')." WHERE uid='$uch['space'][uid]' AND status='1' $whereplus ORDER BY num DESC, dateline DESC LIMIT 0,$limit");
+		// 				$query = $_SGLOBAL['db']->query("SELECT fuid AS uid, fusername AS username, num FROM ".tname('friend')." WHERE uid='$user[uid]' AND status='1' $whereplus ORDER BY num DESC, dateline DESC LIMIT 0,$limit");
 		// 				while ($value = $_SGLOBAL['db']->fetch_array($query)) {
 		// 					realname_set($value['uid'], $value['username']);
 		// 					$value['isonline'] = 0;
@@ -286,7 +287,7 @@ class Member extends MY_Controller {
 		// 			$task = gettask();
 	
 		// 			//��������
-		// 			if($uch['space']['feedfriend']) {
+		// 			if($user['feedfriend']) {
 		// 				list($s_month, $s_day) = explode('-', sgmdate('n-j', $_SGLOBAL['timestamp']-3600*24*7));
 		// 				list($n_month, $n_day) = explode('-', sgmdate('n-j', $_SGLOBAL['timestamp']));
 		// 				list($e_month, $e_day) = explode('-', sgmdate('n-j', $_SGLOBAL['timestamp']+3600*24*7));
@@ -298,7 +299,7 @@ class Member extends MY_Controller {
 		// 				$query = $_SGLOBAL['db']->query("SELECT s.uid,s.username,s.name,s.namestatus,s.groupid,sf.birthyear,sf.birthmonth,sf.birthday
 		// 			FROM ".tname('spacefield')." sf
 		// 			LEFT JOIN ".tname('space')." s ON s.uid=sf.uid
-		// 						WHERE (sf.uid IN ($uch['space'][feedfriend])) AND ($wheresql)");
+		// 						WHERE (sf.uid IN ($user[feedfriend])) AND ($wheresql)");
 		// 				while ($value = $_SGLOBAL['db']->fetch_array($query)) {
 		// 					realname_set($value['uid'], $value['username'], $value['name'], $value['namestatus']);
 		// 					$value['istoday'] = 0;
@@ -312,10 +313,10 @@ class Member extends MY_Controller {
 		// 			}
 	
 		// 			//���
-		// 			$uch['space']['creditstar'] = getstar($uch['space']['credit']);
+		// 			$user['creditstar'] = getstar($user['credit']);
 	
 		// 			//����
-		// 			$uch['space']['domainurl'] = space_domain($uch['space']);
+		// 			$user['domainurl'] = space_domain($user);
 		// 		}
 	
 		// 		//ʵ����
@@ -323,7 +324,7 @@ class Member extends MY_Controller {
 	
 		// 		//feed�ϲ�
 		// 		$list = array();
-		// 		if(empty($uch['space']['feedfriend'])) {
+		// 		if(empty($user['feedfriend'])) {
 		// 			foreach ($feed_list as $value) {
 		// 				$value = mkfeed($value);
 		// 				if($value['dateline']>=$_SGLOBAL['today']) {
@@ -382,15 +383,15 @@ class Member extends MY_Controller {
 	
 		// 		//ɸѡ
 		// 		function ckicon_uid($feed) {
-		// 			global $_SGLOBAL, $uch['space'], $_SCONFIG;
+		// 			global $_SGLOBAL, $user, $_SCONFIG;
 	
-		// 			if($uch['space']['filter_icon']) {
+		// 			if($user['filter_icon']) {
 		// 				$key = $feed['icon'].'|0';
-		// 				if(in_array($key, $uch['space']['filter_icon'])) {
+		// 				if(in_array($key, $user['filter_icon'])) {
 		// 					return false;
 		// 				} else {
 		// 					$key = $feed['icon'].'|'.$feed['uid'];
-		// 					if(in_array($key, $uch['space']['filter_icon'])) {
+		// 					if(in_array($key, $user['filter_icon'])) {
 		// 						return false;
 		// 					}
 		// 				}
@@ -406,44 +407,45 @@ class Member extends MY_Controller {
 			$this->template->build('home');
 	}
 	
-	public function index($uid)
+	public function index($uid=0)
 	{
-				$uch = $this->load->get_var('uch');
-				$uch['space']['isfriend'] = $uch['space']['self'];
-		if($uch['space']['friends'] && in_array($uch['supe_uid'], $uch['space']['friends'])) {
-				$uch['space']['isfriend'] = 1;
-		}
+		$auth = $this->load->get_var('auth');
+		$user = $this->member_m->getspace($uid);
+// 		$user['isfriend'] = $user['self'];
+// 		if($user['friends'] && in_array($uch['supe_uid'], $user['friends'])) {
+// 				$user['isfriend'] = 1;
+// 		}
 	
-			$uch['space']['sex_org'] = $uch['space']['sex'];
-		if($this->space_m->ckprivacy('profile')) {
-					$uch['space']['showprofile'] = 1;
-			$uch['space']['sex'] = $uch['space']['sex']=='1'?'<a href="network.php?ac=space&sex=1&searchmode=1">'.lang('man').'</a>':($uch['space']['sex']=='2'?'<a href="network.php?ac=space&sex=2&searchmode=1">'.lang('woman').'</a>':'');
-				$uch['space']['birthday'] = ($uch['space']['birthyear']?"$uch[space][birthyear]".lang('year'):'').($uch['space']['birthmonth']?"$uch[space][birthmonth]".lang('month'):'').($uch['space']['birthday']?"$uch[space][birthday]".lang('day'):'');
-			$uch['space']['marry'] = $uch['space']['marry']=='1'?'<a href="network.php?ac=space&marry=1&searchmode=1">'.lang('unmarried').'</a>':($uch['space']['marry']=='2'?'<a href="network.php?ac=space&marry=2&searchmode=1">'.lang('married').'</a>':'');
-				$uch['space']['birth'] = trim(($uch['space']['birthprovince']?"<a href=\"network.php?ac=space&birthprovince=".rawurlencode($uch['space']['birthprovince'])."&searchmode=1\">$uch[space][birthprovince]</a>":'').($uch['space']['birthcity']?" <a href=\"network.php?ac=space&birthcity=".rawurlencode($uch['space']['birthcity'])."&searchmode=1\">$uch[space][birthcity]</a>":''));
-				$uch['space']['reside'] = trim(($uch['space']['resideprovince']?"<a href=\"network.php?ac=space&resideprovince=".rawurlencode($uch['space']['resideprovince'])."&searchmode=1\">$uch[space][resideprovince]</a>":'').($uch['space']['residecity']?" <a href=\"network.php?ac=space&residecity=".rawurlencode($uch['space']['residecity'])."&searchmode=1\">$uch[space][residecity]</a>":''));
-				$uch['space']['qq'] = empty($uch['space']['qq'])?'':"<a target=\"_blank\" href=\"http://wpa.qq.com/msgrd?V=1&Uin=$uch[space][qq]&Site=$uch[space][username]&Menu=yes\">$uch[space][qq]</a>";
-				@include_once(S_ROOT.'./data/data_profilefield.php');
+		$user['sex_org'] = $user['sex'];
+		if($this->member_m->ckprivacy('profile')) {
+			$user['showprofile'] = 1;
+			$user['sex'] = $user['sex']=='1'?'<a href="network.php?ac=space&sex=1&searchmode=1">'.lang('man').'</a>':($user['sex']=='2'?'<a href="network.php?ac=space&sex=2&searchmode=1">'.lang('woman').'</a>':'');
+			$user['birthday'] = ($user['birthyear']?"$uch[space][birthyear]".lang('year'):'').($user['birthmonth']?"$uch[space][birthmonth]".lang('month'):'').($user['birthday']?"$uch[space][birthday]".lang('day'):'');
+			$user['marry'] = $user['marry']=='1'?'<a href="network.php?ac=space&marry=1&searchmode=1">'.lang('unmarried').'</a>':($user['marry']=='2'?'<a href="network.php?ac=space&marry=2&searchmode=1">'.lang('married').'</a>':'');
+			$user['birth'] = trim(($user['birthprovince']?"<a href=\"network.php?ac=space&birthprovince=".rawurlencode($user['birthprovince'])."&searchmode=1\">$uch[space][birthprovince]</a>":'').($user['birthcity']?" <a href=\"network.php?ac=space&birthcity=".rawurlencode($user['birthcity'])."&searchmode=1\">$uch[space][birthcity]</a>":''));
+			$user['reside'] = trim(($user['resideprovince']?"<a href=\"network.php?ac=space&resideprovince=".rawurlencode($user['resideprovince'])."&searchmode=1\">$uch[space][resideprovince]</a>":'').($user['residecity']?" <a href=\"network.php?ac=space&residecity=".rawurlencode($user['residecity'])."&searchmode=1\">$uch[space][residecity]</a>":''));
+			$user['qq'] = empty($user['qq'])?'':"<a target=\"_blank\" href=\"http://wpa.qq.com/msgrd?V=1&Uin=$uch[space][qq]&Site=$uch[space][username]&Menu=yes\">$uch[space][qq]</a>";
+			@include_once(S_ROOT.'./data/data_profilefield.php');
 			$fields = empty($uch['profilefield'])?array():$uch['profilefield'];
 		} else {
-		$uch['space']['showprofile'] = 0;
+		$user['showprofile'] = 0;
 		}
 	
-		if($uch['space']['spacenote']) {
-				$uch['space']['spacenote'] = getstr($uch['space']['spacenote'], 50);
+		if($user['spacenote']) {
+				$user['spacenote'] = getstr($user['spacenote'], 50);
 		}
 							
-		if(!$uch['space']['self']) {
-		$this->db->set('num', 'num+1', FALSE)->update('friend', array(), array('uid'=>$uch['global']['supe_uid'], 'fuid'=>$uch['space']['uid']));
-		}
+// 		if(!$user['self']) {
+// 		$this->db->set('num', 'num+1', FALSE)->update('friend', array(), array('uid'=>$uch['global']['supe_uid'], 'fuid'=>$user['uid']));
+// 		}
 	
 	
 				$uch['ad'] = array();
 	
 	
-				if(!$uch['space']['self']) {
-				$this->db->set('viewnum', 'viewnum+1', FALSE)->update('space', array(), array('uid'=>$uch['space']['uid']));
-			}
+// 				if(!$user['self']) {
+// 				$this->db->set('viewnum', 'viewnum+1', FALSE)->update('space', array(), array('uid'=>$user['uid']));
+// 			}
 	
 			$_GET['view'] = 'me';
 	
