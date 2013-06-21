@@ -33,6 +33,8 @@ class Plugin_Member extends Plugin
 		return $this->member_l->$name;
 	}
 	
+
+	
 	public function avatar()
 	{
 		$uid = $this->attribute('uid', $this->input->get('uid'));

@@ -9,22 +9,17 @@ class Member_m extends MY_Model
 	
 	function checkauth() 
 	{		
-		@list($password, $uid) = explode("\t", authcode(get_cookie('auth'), 'DECODE', UC_KEY));
-		$auth = $this->db->where(array('uid'=>$uid, 'password'=>$password))->get('session')->row_array();
-		if( ! $auth) 
+		$uid = authcode(get_cookie('auth'), 'DECODE');
+		if( ! $auth = $this->getspace($uid))
 		{
-			$auth = $this->db->where(array('uid'=>$uid, 'password'=>$password))->get('member')->row_array();		
-		}		
-		if( ! $auth)
-		{
-			$auth = array('uid'=>0, 'username'=>'', 'password'=>'');
-		}	
+			set_cookie('auth', '', -86400 * 365);
+		}
 		return $auth;
 	}
 	
 	public function insertsession($setarr) 
 	{
-		extract($this->load->get_var('global'));
+		$config = $this->load->get_var('config');
 
 		$this->db->or_where('lastactivity <', intval(time()-$config['onlinehold']))->delete('session', array('uid'=>$setarr['uid']));
 		
@@ -36,11 +31,6 @@ class Member_m extends MY_Model
 		$setarr['lastactivity'] = time();
 		$setarr['ip'] = $ip;
 		$this->db->replace('session', $setarr);
-	}
-	
-	function clearcookie() 
-	{
-		set_cookie('auth', '', -86400 * 365);
 	}
 	
 	public function avatar($uid, $size='middle', $type='')
@@ -59,7 +49,7 @@ class Member_m extends MY_Model
 	
 	public function updatelogin()
 	{
-		extract($this->load->get_var('global'));
+		$auth = $this->load->get_var('auth');
 		if($auth['uid'] AND  ! isset($auth['lastactivity']))
 		{
 			$ips = explode('.', $this->input->ip_address());
@@ -71,45 +61,29 @@ class Member_m extends MY_Model
 			$this->db->update('space', array('lastlogin'=>time(), 'ip' => $ip), array('uid'=>$auth['uid']));
 		}
 	}
+
 	
-	public function getmember()
+	function getspace($key, $indextype='uid', $auto_open=0)
 	{
-		extract($this->load->get_var('global'));
-		if($auth['uid'])
-		{
-			return $this->getspace($auth['uid']);
-		}
-		return array();
-	}
-	
-	function question() 
-	{
-		$spam = $this->cache->get('spam');
-		return $spam[mt_rand(0, max(count($spams)-1, 0))];
-	}
-	
-	function getspace($key, $indextype='uid', $auto_open=1)
-	{
-		$uch = $this->load->get_var('uch');
-	
+		$config = $this->load->get_var('config');	
 		$var = "space_{$key}_{$indextype}";
-		if(empty($uch[$var])) {
+		$space = $this->load->get_var($var);
+		if(empty($space)) {
 			$space = $this->db->select('sf.*, s.*')->from('space s')->join('spacefield sf', 'sf.uid=s.uid', 'LEFT')->where("s.{$indextype}", $key)->get()->row_array();
-			if(!$space) {
-				$space = array();
-				if($indextype=='uid' && $auto_open) {
-					include_once(S_ROOT.'./uc_client/client.php');
-					if($user = uc_get_user($key, 1)) {
-						include_once(S_ROOT.'./source/function_space.php');
-						$space = space_open($user[0], addslashes($user[1]), 0, addslashes($user[2]));
-					}
-				}
-			}
+// 			if(!$space) {
+// 				$space = array();
+// 				if($indextype=='uid' && $auto_open) {
+// 					include_once(S_ROOT.'./uc_client/client.php');
+// 					if($user = uc_get_user($key, 1)) {
+// 						include_once(S_ROOT.'./source/function_space.php');
+// 						$space = space_open($user[0], addslashes($user[1]), 0, addslashes($user[2]));
+// 					}
+// 				}
+// 			}
 			if($space) {
-				$space['realname'] = ($uch['config']['realname'] && $space['name'] && $space['namestatus'])?$space['name']:$space['username'];
-				$space['self'] = $space['uid']==$uch['global']['supe_uid'];
+				$space['realname'] = ($config['realname'] && $space['name'] && $space['namestatus'])?$space['name']:$space['username'];
 				$isonline = $this->db->where('uid', $space['uid'])->get('session')->row_array();
-				$space['isonline'] = $isonline?sgmdate('H:i:s', $isonline['lastactivity'], 1):0;
+				$space['isonline'] = sgmdate('H:i:s', $space['lastactivity'], 1);
 				$space['creditstar'] = $this->getstar($space['credit']);
 				$space['domainurl'] = $this->space_domain($space);
 					
@@ -129,19 +103,16 @@ class Member_m extends MY_Model
 					$space['friends'] = explode(',', $space['friend']);
 				}
 					
-				$space['privacy'] = empty($space['privacy'])?(empty($uch['config']['privacy'])?array():$uch['config']['privacy']):unserialize($space['privacy']);
-				if($space['self']) {
-					$uch['member'] = $space;
-				}
-				$uch['space'] = $space;
+				$space['privacy'] = empty($space['privacy'])?(empty($config['privacy'])?array():$config['privacy']):unserialize($space['privacy']);
+
+				$this->cache->save($var, $space);
 			}
 			else {
-				show_message('space_does_not_exist', base_url('space/home'), 0);
+				return FALSE;
 			}
-			$uch[$var] = $space;
-			$this->load->vars('uch', $uch);
+			$this->load->vars($var, $space);
 		}
-		return $uch[$var];
+		return $space;
 	}
 	
 	function checklogin() {
@@ -149,17 +120,17 @@ class Member_m extends MY_Model
 	
 		if(empty($uch['global']['supe_uid'])) {
 			set_cookie('_refer', rawurlencode($_SERVER['REQUEST_URI']));
-			show_message('to_login', 'do.php?ac='.$uch['config']['login_action']);
+			show_message('to_login', 'do.php?ac='.$config['login_action']);
 		}
 	}
 	
 	function space_domain($space) {
-		$uch = $this->load->get_var('uch');
+		$config = $this->load->get_var('config');
 	
-		if($space['domain'] && $uch['config']['allowdomain'] && $uch['config']['domainroot']) {
-			$space['domainurl'] = 'http://'.$space['domain'].'.'.$uch['config']['domainroot'];
+		if($space['domain'] && $config['allowdomain'] && $config['domainroot']) {
+			$space['domainurl'] = 'http://'.$space['domain'].'.'.$config['domainroot'];
 		} else {
-			if($uch['config']['allowrewrite']) {
+			if($config['allowrewrite']) {
 				$space['domainurl'] = base_url()."space/uid-{$space['uid']}.html";
 			} else {
 				$space['domainurl'] = base_url()."space?uid={$space['uid']}";
@@ -169,13 +140,13 @@ class Member_m extends MY_Model
 	}
 	
 	function getstar($credit) {
-		$uch = $this->load->get_var('uch');
+		$config = $this->load->get_var('config');
 	
 		$starimg = '';
-		if($uch['config']['starcredit'] > 1) {
+		if($config['starcredit'] > 1) {
 			//����������
-			$starnum = intval($credit/$uch['config']['starcredit']) + 1;
-			if($uch['config']['starlevelnum'] < 2) {
+			$starnum = intval($credit/$config['starcredit']) + 1;
+			if($config['starlevelnum'] < 2) {
 				if($starnum > 10) $starnum = 10;
 				for($i = 0; $i < $starnum; $i++) {
 					$starimg .= '<img src="'.base_url().'image/star_level10.gif" align="absmiddle" />';
@@ -183,7 +154,7 @@ class Member_m extends MY_Model
 			} else {
 				//����ȼ�(10��)
 				for($i = 10; $i > 0; $i--) {
-					$numlevel = intval($starnum / pow($uch['config']['starlevelnum'], ($i - 1)));
+					$numlevel = intval($starnum / pow($config['starlevelnum'], ($i - 1)));
 					if($numlevel > 10) $numlevel = 10;
 					if($numlevel) {
 						for($j = 0; $j < $numlevel; $j++) {

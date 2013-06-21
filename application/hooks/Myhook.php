@@ -36,10 +36,6 @@ class Myhook {
 		Events::trigger('checkclose');
 	}
 	
-	public function getmember()
-	{
-		Events::trigger('getmember');
-	}
 }
 
 /* End of file welcome.php */

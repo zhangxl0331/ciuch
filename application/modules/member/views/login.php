@@ -1,4 +1,4 @@
-<?=form_open('member'.$global['config']['login_action'].'?ref', array('id'=>'loginform', 'name'=>'loginform', 'class'=>'c_from'))?>
+<?=form_open('member/'.$config['login_action'].'?ref', array('id'=>'loginform', 'name'=>'loginform', 'class'=>'c_from'))?>
 <table cellpadding="0" cellspacing="0" class="formtable">
 	<caption>
 		<h2>请登录</h2>
@@ -14,19 +14,21 @@
 	</tr>
 	{{ endif }}{{ /noparse }}
 	
-	{{ if global:config:seccode_login }}
+	{{ if config:seccode_login }}
 	<tr>
 		<th width="100">&nbsp;</th>
 		<td>
 		请通过下面的验证后，再提交登录
 		</td>
 	</tr>
-	{{ if global:config:questionmode }}
+	{{ if config:questionmode }}
 	<tr>
 		<th width="100" style="vertical-align: top;">请先回答问题</th>
 		<td>
-			<p><?=$spam['question']?></p>
-			<?=form_hidden('answer', $spam['answer'])?>
+			{{ spam:question noloop=1 }}
+			<p>{{ question }}</p>
+			<input type="hidden" value="{{ answer }}" name="answer">
+			{{ /spam:question }}
 			<input type="text" id="seccode" name="seccode" value="" tabindex="1" class="t_input" onBlur="checkSeccode()" />&nbsp;<span id="checkseccode">&nbsp;</span>
 		</td>
 	</tr>
@@ -34,9 +36,11 @@
 	<tr>
 		<th width="100" style="vertical-align: top;">验证码</th>
 		<td>
-			<?=$captcha['image']?>
-			<?=form_hidden('word', $captcha['word'])?>
-			<?=form_hidden('time', $captcha['time'])?>
+			{{ spam:captcha noloop=1 }}
+			{{ image }}
+			<input type="hidden" value="{{ word }}" name="word">
+			<input type="hidden" value="{{ time }}" name="time">
+			{{ /spam:captcha }}
 			<p>请输入上面的字母或数字，看不清可<a href="javascript:updateseccode()">更换一张</a></p>
 			<input type="text" id="seccode" name="seccode" value="" tabindex="1" class="t_input" onBlur="checkSeccode()" />&nbsp;<span id="checkseccode">&nbsp;</span>
 		</td>
@@ -44,19 +48,19 @@
 	{{ endif }}
 	{{ endif }}
 	<tbody style="display:<!--{if $_SGLOBAL['input_seccode']}-->none<!--{/if}-->;">
-	<tr><th width="100"><?=form_label('用户名', 'username')?></th><td><?=form_input(array('name'=>'username', 'id'=>'username', 'class'=>'t_input', 'value'=>set_value('username', $global['data']['membername']), 'tabindex'=>2))?></td></tr>
-	<tr><th width="100"><?=form_label('密　码', 'password')?></th><td><?=form_password(array('name'=>'password', 'id'=>'password', 'class'=>'t_input', 'value'=>set_value('password', $global['data']['password']), 'tabindex'=>3))?></td></tr>
+	<tr><th width="100"><?=form_label('用户名', 'username')?></th><td><?=form_input(array('name'=>'username', 'id'=>'username', 'class'=>'t_input', 'value'=>set_value('username', get_cookie('loginuser')), 'tabindex'=>2))?></td></tr>
+	<tr><th width="100"><?=form_label('密　码', 'password')?></th><td><?=form_password(array('name'=>'password', 'id'=>'password', 'class'=>'t_input', 'value'=>set_value('password', ''), 'tabindex'=>3))?></td></tr>
 	<tr>
 		<th width="100">&nbsp;</th>
 		<td>
-			<?=form_checkbox(array('id'=>'cookietime', 'name'=>'cookietime', 'value'=>315360000, 'checked'=>$cookiecheck, 'style'=>'margin-bottom: -2px'))?><?=form_label('下次自动登录', 'cookietime')?>
+			<?=form_checkbox(array('id'=>'cookietime', 'name'=>'cookietime', 'value'=>315360000, 'checked'=>'checked', 'style'=>'margin-bottom: -2px'))?><?=form_label('下次自动登录', 'cookietime')?>
 		</td>
 	</tr>
 	</tbody>
 	<tr><th width="100">&nbsp;</th><td>
-		<?=form_hidden('refer', $refer)?>
+		<?=form_hidden('refer', empty($_GET['refer'])?get_cookie('_refer'):$_GET['refer'])?>
 		<?=form_submit(array('id'=>'loginsubmit', 'name'=>'loginsubmit', 'value'=>'登录', 'class'=>'submit', 'tabindex'=>5))?>
-		<a href="do.php?ac=lostpasswd">忘记密码?</a>
+		<a href="<?=site_url('member/lostpasswd')?>">忘记密码?</a>
 	</td></tr>
 </table>
 <?=form_close()?>

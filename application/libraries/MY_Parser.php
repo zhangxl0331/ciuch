@@ -145,7 +145,7 @@ class MY_Parser extends CI_Parser {
 	 * @return	string
 	 */
 	function _parse($string, $data, $return = FALSE, $is_include = FALSE)
-	{	
+	{
 		// Start benchmark
 		$this->_ci->benchmark->mark('parse_start');
 
@@ -187,14 +187,14 @@ class MY_Parser extends CI_Parser {
 		$this->_ci->load->library('plugins');
 
 		$return_data = $this->_ci->plugins->locate($plugin, $attributes, $content);
-		
+
 		if (is_array($return_data) && $return_data)
 		{
 			if ( ! $this->_is_multi($return_data))
 			{
 				$return_data = $this->_make_multi($return_data);
 			}
-			
+
 			// $content = $data['content']; # TODO What was this doing other than throw warnings in 2.0?
 			$parsed_return = '';
 

@@ -17,6 +17,7 @@ class Events_Spam
 		$spam = $this->CI->spam_m->spam_cache();
 		$this->CI->load->vars(array('spam'=>$spam));
 	}
+
 }
 /* End of file events.php */
 

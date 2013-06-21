@@ -11,6 +11,10 @@
 class Plugin_Spam extends Plugin
 {
 
+	public function __construct()
+	{
+		$this->load->model('spam/spam_m');
+	}
 	/**
 	 * Execute whitelisted php functions
 	 *
@@ -21,7 +25,16 @@ class Plugin_Spam extends Plugin
 	 */
 	public function __call($name, $args)
 	{
-		$this->load->library('config/config_l');
-		return $this->config_l->$name;
+		
+	}
+	
+	public function question()
+	{
+		return $this->spam_m->question();
+	}
+	
+	public function captcha()
+	{
+		return $this->spam_m->captcha();
 	}
 }

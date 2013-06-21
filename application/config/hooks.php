@@ -31,12 +31,6 @@ $hook['pre_controller'][] = array(
 		'filepath' => 'hooks'
 );
 
-$hook['pre_controller'][] = array(
-		'class'    => 'Myhook',
-		'function' => 'getmember',
-		'filename' => 'Myhook.php',
-		'filepath' => 'hooks'
-);
 
 // $hook['post_controller_constructor'][] = array(
 // 		'class'    => 'Myhook',
