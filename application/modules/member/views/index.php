@@ -42,7 +42,7 @@
 		</div>
 		
 		<div id="content">
-			{{ theme:partial name="tabs" module="space" }}
+			{{ theme:partial name="tabs" module="member" }}
 
 		
 			<div class="composer">
