@@ -61,7 +61,7 @@ class Config_m extends MY_Model
 	
 	public function checkclose()
 	{
-		extract($this->load->get_var('global'));
+		$config = $this->load->get_var('config');
 		if(isset($config['close']) AND $config['close']) 
 		{
 			if(empty($config['closereason'])) 

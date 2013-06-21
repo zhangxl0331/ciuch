@@ -1,15 +1,15 @@
-<?=form_open('member'.$uch['config']['login_action'].'?ref', array('id'=>'loginform', 'name'=>'loginform', 'class'=>'c_from'))?>
+<?=form_open('member'.$global['config']['login_action'].'?ref', array('id'=>'loginform', 'name'=>'loginform', 'class'=>'c_from'))?>
 <table cellpadding="0" cellspacing="0" class="formtable">
 	<caption>
 		<h2>请登录</h2>
 		<p>如果您在本站已拥有帐号，请使用已有的帐号信息直接进行登录即可，不需重复注册。</p>
 	</caption>
-	{{ noparser }}{{ if invitearr }}
+	{{ noparse }}{{ if invitearr }}
 	<tr>
 		<th width="100">好友邀请</th>
 		<td>
-			<a href="space.php?$url_plus" target="_blank"><img src="<!--{avatar($invitearr[uid],small)}-->" alt="{$_SN[$invitearr[uid]]}" id="avatar" align="absmiddle" /></a>
-			<a href="space.php?$url_plus" target="_blank">{$_SN[$invitearr[uid]]}</a>
+			<a href="space.php?$url_plus" target="_blank"><img src="" alt="" id="avatar" align="absmiddle" /></a>
+			<a href="space.php?$url_plus" target="_blank"></a>
 		</td>
 	</tr>
 	{{ endif }}{{ /noparse }}
@@ -44,8 +44,8 @@
 	{{ endif }}
 	{{ endif }}
 	<tbody style="display:<!--{if $_SGLOBAL['input_seccode']}-->none<!--{/if}-->;">
-	<tr><th width="100"><?=form_label('用户名', 'username')?></th><td><?=form_input(array('name'=>'username', 'id'=>'username', 'class'=>'t_input', 'value'=>set_value('username', $uch['data']['membername']), 'tabindex'=>2))?></td></tr>
-	<tr><th width="100"><?=form_label('密　码', 'password')?></th><td><?=form_password(array('name'=>'password', 'id'=>'password', 'class'=>'t_input', 'value'=>set_value('password', $uch['data']['password']), 'tabindex'=>3))?></td></tr>
+	<tr><th width="100"><?=form_label('用户名', 'username')?></th><td><?=form_input(array('name'=>'username', 'id'=>'username', 'class'=>'t_input', 'value'=>set_value('username', $global['data']['membername']), 'tabindex'=>2))?></td></tr>
+	<tr><th width="100"><?=form_label('密　码', 'password')?></th><td><?=form_password(array('name'=>'password', 'id'=>'password', 'class'=>'t_input', 'value'=>set_value('password', $global['data']['password']), 'tabindex'=>3))?></td></tr>
 	<tr>
 		<th width="100">&nbsp;</th>
 		<td>

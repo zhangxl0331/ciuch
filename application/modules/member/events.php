@@ -14,7 +14,7 @@ class Events_Member
 	// this will be triggered by the Events::trigger('public_controller') code in Public_Controller.php
 	public function checkauth($data = array())
 	{
-		$global['auth'] = $auth = $this->CI->member_m->checkauth();
+		$auth = $this->CI->member_m->checkauth();
 		if($auth['uid'])
 		{
 			if( ! isset($auth['lastactivity']))
@@ -25,9 +25,8 @@ class Events_Member
 		else 
 		{
 			$this->CI->member_m->clearcookie();
-			$global['member'] = array();
 		}
-		$this->CI->load->vars(array('global'=>$global));
+		$this->CI->load->vars(array('auth'=>$auth));
 	}
 
 //     public function replace_member($data = array())

@@ -12,7 +12,7 @@ class Member extends MY_Controller {
 	 */
 	public function login()
 	{
-		extract($this->load->get_var('global'));
+		$auth = $this->load->get_var('auth');
 		if($auth['uid']) 
 		{
 			showmessage('do_success', 'space.php', 0);
@@ -150,7 +150,7 @@ class Member extends MY_Controller {
 	
 	public function _remap($ac, $params = array())
 	{
-		extract($this->load->get_var('global'));
+		$config = $this->load->get_var('config');
 		if(isset($config['login_action']) AND $ac == $config['login_action']) 
 		{
 			$ac = 'login';

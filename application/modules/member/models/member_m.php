@@ -82,6 +82,12 @@ class Member_m extends MY_Model
 		return array();
 	}
 	
+	function question() 
+	{
+		$spam = $this->cache->get('spam');
+		return $spam[mt_rand(0, max(count($spams)-1, 0))];
+	}
+	
 	function getspace($key, $indextype='uid', $auto_open=1)
 	{
 		$uch = $this->load->get_var('uch');

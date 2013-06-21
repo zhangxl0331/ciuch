@@ -15,8 +15,9 @@ class Events_Config
 	
 	public function checkcache($data = array())
 	{
-		$global['config'] = $this->CI->config_m->config_cache();
-		$this->CI->load->vars(array('global'=>$global));
+		$config = $this->CI->config_m->config_cache();
+
+		$this->CI->load->vars(array('config'=>$config));
 	}
 	
 	public function checkclose($data = array())

@@ -7,7 +7,7 @@
 <title>
 {{ if template:title }}{{ template:title }} - {{ endif }}
 {{ if global:space:realname }}{{ global:space:username }} - {{ endif }}
-{{ global:config:sitename }} - Powered by {{ global:config:sitename }}
+{{ config:sitename }} - Powered by {{ config:sitename }}
 </title>
 {{ theme:js file="script_cookie.js" }}
 {{ theme:js file="script_common.js" }}
@@ -20,7 +20,7 @@
 {{ theme:css file="style.css" theme=default }}
 {{ theme:css file="style.css" theme=global:space:theme }}
 {{ else }}
-{{ theme:css file="style.css" theme=global:config:template }}
+{{ theme:css file="style.css" theme=config:template }}
 {{ endif }}
 <style type="text/css">
 {{ if global:space:css }}
@@ -39,7 +39,7 @@
 <div id="header">
 	{{ if ad:header }}<div id="ad_header">{{ad/header}}</div>{{ endif }}
 	<div class="headerwarp">
-		<h1 class="logo"><a href="index.php"><img src="{{ global:config:sitelogo }}" alt="{{ global:config:sitename }}" /></a></h1>
+		<h1 class="logo"><a href="index.php"><img src="{{ config:sitelogo }}" alt="{{ config:sitename }}" /></a></h1>
 		<ul class="menu">
 		{{ if global:auth:uid }}
 			<li><a href="space.php?do=home">首页</a></li>
@@ -65,12 +65,12 @@
 			<a href="{{ url:site }}space/uid-{{ global:auth:uid }}.html" class="loginName">{{ global:space:realname }}</a>
 			{{if global:space:realname != member:username }}({{ member:username }}){{endif}}
 			<br />
-			{{if not global:config:closeinvite }}<a href="cp.php?ac=invite">邀请</a> | {{ endif }}<a href="cp.php">设置</a> | <a href="cp.php?ac=privacy">隐私</a> | <a href="cp.php?ac=common&op=logout">退出</a>
+			{{if not config:closeinvite }}<a href="cp.php?ac=invite">邀请</a> | {{ endif }}<a href="cp.php">设置</a> | <a href="cp.php?ac=privacy">隐私</a> | <a href="cp.php?ac=common&op=logout">退出</a>
 		{{ else }}
-			<a href="{{ url:site }}member/{{ global:config:register_action }}" class="login_thumb"><img src="{{avatar(global:auth:uid,small)}}" width="20" height="20" /></a>
+			<a href="{{ url:site }}member/{{ config:register_action }}" class="login_thumb"><img src="{{avatar(global:auth:uid,small)}}" width="20" height="20" /></a>
 			欢迎您<br>
-			<a href="{{ url:site }}member/{{ global:config:login_action }}">登录</a> | 
-			<a href="{{ url:site }}member/{{ global:config:register_action }}">注册</a>
+			<a href="{{ url:site }}member/{{ config:login_action }}">登录</a> | 
+			<a href="{{ url:site }}member/{{ config:register_action }}">注册</a>
 		{{ endif }}
 		</div>
 	</div>
@@ -89,14 +89,14 @@
 				<li><img src="image/app/mtag.gif"><a href="space.php?do=thread">群组</a><em><a href="cp.php?ac=thread">话题</a></em></li>
 				<li><img src="image/app/share.gif"><a href="space.php?do=share">分享</a></li>
 				
-			{{ if global:config:my_status }}
+			{{ if config:my_status }}
 				{{ userapp:default_menu }}
 				<li><img src="http://appicon.manyou.com/icons/{{ appid }}"><a href="userapp.php?id={{ appid }}">{{ appname }}</a></li>
 				{{ /userapp:default_menu }}
 			{{ endif }}
 			</ul>
 			
-			{{ if global:config:my_status }}
+			{{ if config:my_status }}
 			{{ userapp:my_menu uid=global:space:uid limit=global:space:menunum }}
 			<ul class="app_list" id="my_userapp">
 				{{ my_menu }}
@@ -119,7 +119,7 @@
 		
 		{{ else }}
 			<div class="bar_text">
-				<form id="loginform" name="loginform" action="do.php?ac={{ global:config:login_action }}&ref" method="post">
+				<form id="loginform" name="loginform" action="do.php?ac={{ config:login_action }}&ref" method="post">
 				<input type="hidden" name="formhash" value="" />
 					<p class="title">登录站点</p>
 					<p>用户名</p>
@@ -129,7 +129,7 @@
 					<p><input type="checkbox" id="cookietime" name="cookietime" value="315360000" checked /><label for="cookietime">记住我</label></p>
 					<p>
 						<input type="submit" id="loginsubmit" name="loginsubmit" value="登录" class="submit"  />
-						<a href="{{ url:site }}member/{{ global:config:register_action }}" class="button">注册</a>
+						<a href="{{ url:site }}member/{{ config:register_action }}" class="button">注册</a>
 					</p>
 				</form>
 			</div>
