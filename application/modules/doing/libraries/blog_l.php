@@ -8,24 +8,16 @@
  * @author		PyroCMS Dev Team
  * @package		PyroCMS\Core\Modules\Settings\Libraries
  */
-class Blog_l extends Uch 
+class Blog_l1 extends Uch 
 {	
 	protected $CI;
 	
 	public function __construct()
 	{
 		$this->CI = & get_instance();
-		$this->CI->load->library(
-			array(
-				'config/config_l',
-				'uch',
-			)
-		);
 		$this->CI->load->model(
 			array(
 				'blog/blog_m',
-				'blog/blogfield_m',
-				'blog/class_m',
 			)
 		);
 		$this->CI->load->helper(

@@ -28,7 +28,7 @@ class Plugin_Theme extends Plugin
 
 		if (method_exists( $this->router, 'fetch_module' ))
 		{
-			$module = $this->router->fetch_module();
+			$module = $this->attribute('module')?$this->attribute('module'):$this->router->fetch_module();
 			foreach (Modules::$locations as $location => $offset)
 			{
 				$this->viewpaths[] = $location.$module.'/views/';
@@ -55,7 +55,7 @@ class Plugin_Theme extends Plugin
 	{
 		$name = $this->attribute('name');
 		$module = $this->attribute('module');
-		$view = $module?'modules/'.$module.'/partials/'.$name:'partials/'.$name;
+		$view = 'partials/'.$name;
 		$data = $this->load->get_vars();
 		
 		return $this->template->_find_view($view, $data, TRUE);

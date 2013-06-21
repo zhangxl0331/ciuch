@@ -12,10 +12,10 @@ class Events_Space
         // register the public_controller event when this file is autoloaded
         Events::register('updatelogin', array($this, 'updatelogin'));
         Events::register('getmember', array($this, 'getmember'));
-        Events::register('ckprivacy', array($this, 'ckprivacy'));
-        Events::register('privacy_tab', array($this, 'privacy_tab'), 1);
-        Events::register('replace_session', array($this, 'replace_session'));
-        Events::register('update_space', array($this, 'update_space'));
+//         Events::register('ckprivacy', array($this, 'ckprivacy'));
+//         Events::register('privacy_tab', array($this, 'privacy_tab'), 1);
+//         Events::register('replace_session', array($this, 'replace_session'));
+//         Events::register('update_space', array($this, 'update_space'));
 //         Events::register('update_space_lastlogin', array($this, 'update_space_lastlogin'));
 //         Events::register('insert_space', array($this, 'insert_space'));
 //         Events::register('checklogin', array($this, 'checklogin'));
