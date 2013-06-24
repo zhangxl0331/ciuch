@@ -125,7 +125,7 @@
 			<!--{loop $visitorlist $key $value}-->
 			<li>
 				<div class="avatar48"><a href="space.php?uid=$value[vuid]"><img src="<!--{avatar($value[vuid],small)}-->" alt="{$_SN[$value[vuid]]}" /></a></div>
-				<p<!--{if $ols[$value[vuid]]}--> class="online_icon_p" title="在线"<!--{/if}-->><a href="space.php?uid=$value[vuid]" title="{$_SN[$value[vuid]]}">{$_SN[$value[vuid]]}</a></p>
+				<p<?php if($ols[$value[vuid]]):?> class="online_icon_p" title="在线"<?php endif;?>><a href="space.php?uid=$value[vuid]" title="{$_SN[$value[vuid]]}">{$_SN[$value[vuid]]}</a></p>
 				<p class="time"><!--{date('n月j日',$value[dateline],1)}--></p>
 			</li>
 			<!--{/loop}-->
@@ -145,7 +145,7 @@
 			<!--{loop $olfriendlist $key $value}-->
 			<li>
 				<div class="avatar48"><a href="space.php?uid=$value[uid]"><img src="<!--{avatar($value[uid],small)}-->" alt="{$_SN[$value[uid]]}" /></a></div>
-				<p<!--{if $value['isonline']}--> class="online_icon_p" title="在线"<!--{/if}-->><a href="space.php?uid=$value[uid]" title="{$_SN[$value[uid]]}">{$_SN[$value[uid]]}</a></p>
+				<p<?php if($value['isonline']):?> class="online_icon_p" title="在线"<?php endif;?>><a href="space.php?uid=$value[uid]" title="{$_SN[$value[uid]]}">{$_SN[$value[uid]]}</a></p>
 				<p class="time"><!--{if $value[lastactivity]}--><!--{date('H:i',$value[lastactivity],1)}--><!--{else}-->热度($value[num])<!--{/if}--></p>
 			</li>
 			<!--{/loop}-->
