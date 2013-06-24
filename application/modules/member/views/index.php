@@ -7,24 +7,24 @@
 
 		<div id="ubar">
 			<div id="space_avatar">
-				<img src="" alt="{{ uch:space:realname }}" />
+				<img src="" alt="{{ user:realname }}" />
 			</div>
 			
-			{{ if not uch:space:isfriend }}
+			{{ if not user:isfriend }}
 			<div class="borderbox">
-				如果您认识{{ uch:space:realname }}，可以添加为好友。这样，您就可以第一时间关注到好友的更新动态。<br />
-				<img src="image/icon/friend.gif" align="absmiddle"> <a href="cp.php?ac=friend&op=add&uid=$space[uid]" id="a_friend" onclick="ajaxmenu(event, this.id, 99999, '', -1)"><strong>把{{ uch:space:realname }}加为好友</strong></a></p>
+				如果您认识{{ user:realname }}，可以添加为好友。这样，您就可以第一时间关注到好友的更新动态。<br />
+				<img src="image/icon/friend.gif" align="absmiddle"> <a href="cp.php?ac=friend&op=add&uid=$space[uid]" id="a_friend" onclick="ajaxmenu(event, this.id, 99999, '', -1)"><strong>把{{ user:realname }}加为好友</strong></a></p>
 			</div>
 			{{ endif }}
 			
 			<ul class="line_list">
-		{{ if uch:space:self }}
+		{{ if user:self }}
 			<li><img src="{{ url:base }}image/icon/profile.gif" align="absmiddle"><a href="cp.php?ac=profile">编辑资料</a></li>
 		{{ else }}
 			<li><img src="{{ url:base }}image/icon/wall.gif"><a href="#comment">给我留言</a></li>
 			<li><img src="{{ url:base }}image/icon/poke.gif"><a href="cp.php?ac=poke&op=send&uid=$space[uid]" id="a_poke" onclick="ajaxmenu(event, this.id, 99999, '', -1)">打个招呼</a></li>
 			<li><img src="{{ url:base }}image/icon/pm.gif"><a href="cp.php?ac=pm&uid=$space[uid]" id="a_pm" onclick="ajaxmenu(event, this.id, 99999, '', -1)">发送消息</a></li>
-			{{ if uch:space:isfriend }}
+			{{ if user:isfriend }}
 			<li><img src="{{ url:base }}image/icon/friend.gif"><a href="cp.php?ac=friend&op=ignore&uid=$space[uid]" id="a_ignore" onclick="ajaxmenu(event, this.id, 99999)">解除好友</a></li>
 			{{ endif }}
 			<li><img src="{{ url:base }}image/icon/report.gif"><a href="cp.php?ac=common&op=report&idtype=space&id=$space[uid]" id="a_report" onclick="ajaxmenu(event, this.id, 99999,'' , -1)">违规举报</a></li>
@@ -33,11 +33,7 @@
 
 		
 		
-			</ul>
-
-			{{ noparse }}{{ theme:partial name="icons" module="space" }}{{ /noparse }}
-			
-			{{ theme:partial name="space_list" module="doing" }}			
+			</ul>		
 			
 		</div>
 		
@@ -47,61 +43,61 @@
 		
 			<div class="composer">
 
-				<strong class="index_name"{{g_color($space[groupid]);}}>{{ if sconfig:realname && uch:space:name && uch:space:namestatus }}{{stripslashes($space['name']);}} <em>(用户名:{{echo stripslashes($space['username']);}})</em>{{ else }}{{echo stripslashes($space['username']);}}{{ if uch:space:name }} <em>(姓名:{{echo stripslashes($space['name']);}})</em>{{ endif }}{{ endif }}{{g_icon($space[groupid]);}}</strong>
-				{{ if uch:space:isonline }}<span class="time">在线({{ uch:space:isonline }})</span>{{ endif }}
+				<strong class="index_name"{{g_color($space[groupid]);}}>{{ if sconfig:realname && user:name && user:namestatus }}{{stripslashes($space['name']);}} <em>(用户名:{{echo stripslashes($space['username']);}})</em>{{ else }}{{echo stripslashes($space['username']);}}{{ if user:name }} <em>(姓名:{{echo stripslashes($space['name']);}})</em>{{ endif }}{{ endif }}{{g_icon($space[groupid]);}}</strong>
+				{{ if user:isonline }}<span class="time">在线({{ user:isonline }})</span>{{ endif }}
 				<p class="gray">
-					<a href="{{ uch:space:domainurl }}" onclick="javascript:setCopy('{{ uch:space:domainurl }}');return false;" class="spacelink domainurl">{{ uch:space:domainurl }}</a>
+					<a href="{{ user:domainurl }}" onclick="javascript:setCopy('{{ user:domainurl }}');return false;" class="spacelink domainurl">{{ user:domainurl }}</a>
 				</p>
 				<p>
 				
-					{{ if uch:space:self }}
-					已有 <a href="space.php?uid=$space[uid]&do=friend&view=visitor">{{ uch:space:viewnum }}</a> 人次访问, <a href="cp.php?ac=credit">{{ uch:space:credit }}</a>个积分 <a href="cp.php?ac=credit">{{ uch:space:creditstar }}</a>
+					{{ if auth && auth:uid == user:uid }}
+					已有 <a href="space.php?uid=$space[uid]&do=friend&view=visitor">{{ user:viewnum }}</a> 人次访问, <a href="cp.php?ac=credit">{{ user:credit }}</a>个积分 <a href="cp.php?ac=credit">{{ user:creditstar }}</a>
 					{{ else }}
-					已有 {{ uch:space:viewnum }} 人次访问, {{ uch:space:credit }}个积分 <a href="do.php?ac=ajax&op=credit&uid=$space[uid]" id="a_space_view" onclick="ajaxmenu(event, this.id, 99999)">{{ uch:space:creditstar }}</a>
+					已有 {{ user:viewnum }} 人次访问, {{ user:credit }}个积分 <a href="do.php?ac=ajax&op=credit&uid=$space[uid]" id="a_space_view" onclick="ajaxmenu(event, this.id, 99999)">{{ user:creditstar }}</a>
 					{{ endif }}
 				</p>
 
 				<div class="current_status" id="mystate">
-					{{ if uch:space:mood }}<a href="space.php?uid=$space[uid]&do=mood" title="同心情"><img src="image/face/{$space[mood]}.gif" alt="同心情" class="face" /></a> {{ endif }}
-					{{ if uch:space:spacenote }}{{ uch:space:spacenote }}{{ endif }}
-					{{ if uch:space:self }}
-					{{ if not uch:space:mood && uch:space:spacenote }}
+					{{ if user:mood }}<a href="space.php?uid=$space[uid]&do=mood" title="同心情"><img src="image/face/{$space[mood]}.gif" alt="同心情" class="face" /></a> {{ endif }}
+					<?php if($user['spacenote']):?><?=getstr($user['spacenote'], 50)?><?php endif;?>
+					{{ if user:self }}
+					{{ if not user:mood && user:spacenote }}
 						您在做什么？
 					{{ endif }}
 					&nbsp;(<a href="javascript:;" onclick="mood_from();" title="更新状态">更新状态</a><span class="pipe">|</span><a href="space.php?uid=$space[uid]&do=mood">同心情</a>)
 					{{ endif }}
 				</div>
 				
-				{{ if uch:space:showprofile }}
+				<?php if(empty($user['privacy']['view']['profile'])):?>
 				<ul class="profile">
-					{{ if uch:space:sex }}
-						<li>性别：{{ uch:space:sex }}</li>
-					{{ endif }}
-					{{ if uch:space:birthday }}
-						<li>生日：{{ uch:space:birthday }}</li>
-					{{ endif }}
-					{{ if uch:space:blood }}
-						<li>血型：{{ uch:space:blood }}</li>
-					{{ endif }}
-					{{ if uch:space:marry }}
-						<li>婚恋：{{ uch:space:marry }}</li>
-					{{ endif }}
-					{{ if uch:space:reside }}
-					<li>居住：{{ uch:space:reside }}</li>
-					{{ endif }}
-					{{ if uch:space:birth }}
-					<li>家乡：{{ uch:space:birth }}</li>
-					{{ endif }}
-					{{ if uch:space:qq }}
-					<li>QQ：{{ uch:space:qq }}</li>
-					{{ endif }}
-					{{ if uch:space:msn }}
-					<li>MSN：{{ uch:space:msn }}</li>
-					{{ endif }}
+					<?php if($user['sex']):?>
+						<li>性别：<?php if($user['sex']=='1'):?><a href="network.php?ac=space&sex=1&searchmode=1"><?=lang('man')?></a><?php elseif($user['sex']=='2'):?><a href="network.php?ac=space&sex=2&searchmode=1"><?=lang('woman')?></a><?php endif;?></li>
+					<?php endif;?>
+					<?php if($user['birthyear'] || $user['birthmonth'] || $user['birthday']):?>
+						<li>生日：<?=($user['birthyear']?$user['birthyear'].lang('year'):'').($user['birthmonth']?$user['birthmonth'].lang('month'):'').($user['birthday']?$user['birthday'].lang('day'):'');?></li>
+					<?php endif;?>
+					<?php if($user['blood']):?>
+						<li>血型：<?=$user['blood']?></li>
+					<?php endif;?>
+					<?php if($user['marry']):?>
+						<li>婚恋：<?php if($user['marry']=='1'):?><a href="network.php?ac=space&marry=1&searchmode=1"><?=lang('unmarried')?></a><?php elseif($user['marry']=='2'):?><a href="network.php?ac=space&marry=2&searchmode=1"><?=lang('married')?></a><?php endif;?></li>
+					<?php endif;?>
+					<?php if($user['resideprovince'] || $user['residecity']):?>
+					<li>居住：<?=trim(($user['resideprovince']?"<a href=\"network.php?ac=space&resideprovince=".rawurlencode($user['resideprovince'])."&searchmode=1\">$uch[space][resideprovince]</a>":'').($user['residecity']?" <a href=\"network.php?ac=space&residecity=".rawurlencode($user['residecity'])."&searchmode=1\">$uch[space][residecity]</a>":''))?></li>
+					<?php endif;?>
+					<?php if($user['birthprovince'] || $user['birthcity']):?>
+					<li>家乡：<?=trim(($user['birthprovince']?"<a href=\"network.php?ac=space&birthprovince=".rawurlencode($user['birthprovince'])."&searchmode=1\">$uch[space][birthprovince]</a>":'').($user['birthcity']?" <a href=\"network.php?ac=space&birthcity=".rawurlencode($user['birthcity'])."&searchmode=1\">$uch[space][birthcity]</a>":''))?></li>
+					<?php endif;?>
+					<?php if($user['qq']):?>
+					<li>QQ：<a target="_blank" href="http://wpa.qq.com/msgrd?V=1&Uin=<?=$user['qq']?>&Site=<?=$user['username']?>&Menu=yes"><?=$user['qq']?></a></li>
+					<?php endif;?>
+					<?php if($user['msn']):?>
+					<li>MSN：<?=$user['msn']?></li>
+					<?php endif;?>
 				
 					
 				</ul>
-				{{ endif }}			
+				<?php endif;?>		
 				
 			</div>
 

@@ -4,6 +4,6 @@
 	<a href="rss.php?uid=$space[uid]" id="i_rss" title="订阅 RSS">订阅</a>
 	{{ endif }}
 	<ul class="tabs">
-		{{ member:tabs uid=input:uid }}
+		{{ member:tabs uid=user:uid }}
 	</ul>
 </div>

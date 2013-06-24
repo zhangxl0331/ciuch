@@ -65,7 +65,7 @@
 			<a href="{{ url:site }}space/uid-{{ auth:uid }}.html" class="loginName">{{ global:space:realname }}</a>
 			{{if global:space:realname != auth:username }}({{ auth:username }}){{endif}}
 			<br />
-			{{if not config:closeinvite }}<a href="cp.php?ac=invite">邀请</a> | {{ endif }}<a href="cp.php">设置</a> | <a href="cp.php?ac=privacy">隐私</a> | <a href="cp.php?ac=common&op=logout">退出</a>
+			{{if not config:closeinvite }}<a href="cp.php?ac=invite">邀请</a> | {{ endif }}<a href="cp.php">设置</a> | <a href="cp.php?ac=privacy">隐私</a> | <a href="<?=site_url('member/logout')?>">退出</a>
 		{{ else }}
 			<a href="{{ url:site }}member/{{ config:register_action }}" class="login_thumb"><img src="{{avatar(auth:uid,small)}}" width="20" height="20" /></a>
 			欢迎您<br>

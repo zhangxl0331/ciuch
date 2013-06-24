@@ -105,6 +105,21 @@ class Member extends MY_Controller {
 		}
 	}
 	
+	public function logout()
+	{
+		//ɾ��session
+// 		if($_SGLOBAL['supe_uid']) {
+// 			$_SGLOBAL['db']->query("DELETE FROM ".tname('session')." WHERE uid='$_SGLOBAL[supe_uid]'");
+// 			$_SGLOBAL['db']->query("DELETE FROM ".tname('adminsession')." WHERE uid='$_SGLOBAL[supe_uid]'");//����ƽ̨
+// 		}
+		
+// 		include_once S_ROOT.'./uc_client/client.php';
+// 		$ucsynlogout = uc_user_synlogout();
+		
+		set_cookie('auth', '', -86400 * 365);
+		set_cookie('_refer', '');
+		redirect(site_url('page/index'));
+	}
 	public function guide()
 	{
 		$uch = $this->load->get_var('uch');
@@ -411,29 +426,6 @@ class Member extends MY_Controller {
 	{
 		$auth = $this->load->get_var('auth');
 		$user = $this->member_m->getspace($uid);
-// 		$user['isfriend'] = $user['self'];
-// 		if($user['friends'] && in_array($uch['supe_uid'], $user['friends'])) {
-// 				$user['isfriend'] = 1;
-// 		}
-	
-		$user['sex_org'] = $user['sex'];
-		if($this->member_m->ckprivacy('profile')) {
-			$user['showprofile'] = 1;
-			$user['sex'] = $user['sex']=='1'?'<a href="network.php?ac=space&sex=1&searchmode=1">'.lang('man').'</a>':($user['sex']=='2'?'<a href="network.php?ac=space&sex=2&searchmode=1">'.lang('woman').'</a>':'');
-			$user['birthday'] = ($user['birthyear']?"$uch[space][birthyear]".lang('year'):'').($user['birthmonth']?"$uch[space][birthmonth]".lang('month'):'').($user['birthday']?"$uch[space][birthday]".lang('day'):'');
-			$user['marry'] = $user['marry']=='1'?'<a href="network.php?ac=space&marry=1&searchmode=1">'.lang('unmarried').'</a>':($user['marry']=='2'?'<a href="network.php?ac=space&marry=2&searchmode=1">'.lang('married').'</a>':'');
-			$user['birth'] = trim(($user['birthprovince']?"<a href=\"network.php?ac=space&birthprovince=".rawurlencode($user['birthprovince'])."&searchmode=1\">$uch[space][birthprovince]</a>":'').($user['birthcity']?" <a href=\"network.php?ac=space&birthcity=".rawurlencode($user['birthcity'])."&searchmode=1\">$uch[space][birthcity]</a>":''));
-			$user['reside'] = trim(($user['resideprovince']?"<a href=\"network.php?ac=space&resideprovince=".rawurlencode($user['resideprovince'])."&searchmode=1\">$uch[space][resideprovince]</a>":'').($user['residecity']?" <a href=\"network.php?ac=space&residecity=".rawurlencode($user['residecity'])."&searchmode=1\">$uch[space][residecity]</a>":''));
-			$user['qq'] = empty($user['qq'])?'':"<a target=\"_blank\" href=\"http://wpa.qq.com/msgrd?V=1&Uin=$uch[space][qq]&Site=$uch[space][username]&Menu=yes\">$uch[space][qq]</a>";
-			@include_once(S_ROOT.'./data/data_profilefield.php');
-			$fields = empty($uch['profilefield'])?array():$uch['profilefield'];
-		} else {
-		$user['showprofile'] = 0;
-		}
-	
-		if($user['spacenote']) {
-				$user['spacenote'] = getstr($user['spacenote'], 50);
-		}
 							
 // 		if(!$user['self']) {
 // 		$this->db->set('num', 'num+1', FALSE)->update('friend', array(), array('uid'=>$uch['global']['supe_uid'], 'fuid'=>$user['uid']));
@@ -449,7 +441,7 @@ class Member extends MY_Controller {
 	
 			$_GET['view'] = 'me';
 	
-			$this->load->vars('uch', $uch);
+			$this->load->vars('user', $user);
 			$this->load->vars('nosidebar', 1);
 			$this->template->build('index');
 		}

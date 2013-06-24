@@ -1,13 +1,13 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Doing extends Space_Controller {
+class Doing extends MY_Controller {
 
 	function __construct()
 	{
 		parent::__construct();
 	}
 	
-	public function index()
+	public function index($uid)
 	{
 		$uch = $this->load->get_var('uch');
 			
@@ -22,8 +22,8 @@ class Doing extends Space_Controller {
 		
 // 		$f_index = '';
 
-		$count = $this->doing_m->db->where('uid', $_GET['uid'])->count_all_results('doing');
-		$list = $this->doing_m->db->where('uid', $_GET['uid'])->order_by('dateline DESC')->get('doing', $perpage, $start)->result_array();
+		$count = $this->doing_m->db->where('uid', $uid)->count_all_results('doing');
+		$list = $this->doing_m->db->where('uid', $uid)->order_by('dateline DESC')->get('doing', $perpage, $start)->result_array();
 		
 		
 		
