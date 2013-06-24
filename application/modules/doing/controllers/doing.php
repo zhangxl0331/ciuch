@@ -9,7 +9,7 @@ class Doing extends MY_Controller {
 	
 	public function index($uid)
 	{
-		$uch = $this->load->get_var('uch');
+		$user = $this->member_m->getspace($uid);
 			
 		$perpage = 20;
 		$page = empty($_GET['page'])?0:intval($_GET['page']);
@@ -24,95 +24,10 @@ class Doing extends MY_Controller {
 
 		$count = $this->doing_m->db->where('uid', $uid)->count_all_results('doing');
 		$list = $this->doing_m->db->where('uid', $uid)->order_by('dateline DESC')->get('doing', $perpage, $start)->result_array();
-		
-		
-		
-// 		$doid = empty($_GET['doid'])?0:intval($_GET['doid']);
-// 		if($doid) {
-// 			$count = 1;
-// 			$f_index = '';
-// 			$wheresql = "doid='$doid'";
-// 			$theurl .= "&doid=$doid";
-// 		}
-		
-		
-// 		$doids = $clist = $newdoids = array();
-// 		if(empty($count)) {
-// 			$count = $this->doing_m->db->query("SELECT COUNT(*) FROM ".$this->doing_m->db->dbprefix."doing WHERE $wheresql")->num_rows();
-// 		}
-		if($list)
-		{
-			foreach($list as $key=>$value)
-			{
-				$doids[] = $value['doid'];
-			}
-				
-		}
 
-		
-// 		if($doid) {
-// 			$dovalue = empty($list)?array():$list[0];
-// 			if($dovalue) {
-// 				if($dovalue['uid'] == $_SGLOBAL['supe_uid']) {
-// 					$actives = array('me'=>' class="active"');
-// 				} else {
-// 					$space = getspace($dovalue['uid']);//�Է��Ŀռ�
-// 					$actives = array('all'=>' class="active"');
-// 				}
-// 			}
-// 		}
-		
-
-// 		if($doids) {
-// 			$values = array();
-// 			$query = $_SGLOBAL['db']->query("SELECT * FROM ".tname('docomment')." WHERE doid IN (".simplode($doids).")");
-// 			while ($value = $_SGLOBAL['db']->fetch_array($query)) {
-// 				$values[$value['dateline']] = $value;
-// 			}
-			
-// 			ksort($values);
-			
-// 			include_once(S_ROOT.'./source/class_tree.php');
-// 			$tree = new tree();
-// 			foreach ($values as $value) {
-// 				realname_set($value['uid'], $value['username']);
-// 				$newdoids[$value['doid']] = $value['doid'];
-// 				if(empty($value['upid'])) {
-// 					$value['upid'] = "do$value[doid]";
-// 				}
-// 				$tree->setNode($value['id'], $value['upid'], $value);
-// 			}
-// 		}
-		
-// 		foreach ($newdoids as $cdoid) {
-// 			$values = $tree->getChilds("do$cdoid");
-// 			foreach ($values as $key => $id) {
-// 				$one = $tree->getValue($id);
-// 				$one['layer'] = $tree->getLayer($id) * 2;
-// 				$clist[$cdoid][] = $one;
-// 			}
-// 		}
-		
-
-// 		$multi = multi($count, $perpage, $page, $theurl);
-		
-		
-		$moodlist = array();
-		if($uch['space']['mood'] && empty($start)) {
-			$moodlist = $this->space_m->db->select('s.uid,s.username,s.name,s.namestatus,s.mood,s.updatetime,s.groupid,sf.note,sf.sex')
-				->from('space s')
-				->join('spacefield sf', 'sf.uid=s.uid', 'LEFT')
-				->where(array('s.mood'=>$uch['space']['mood'], 's.uid !='=>$uch['space']['uid']))
-				->order_by('s.updatetime DESC')
-				->get('', 12, 0)
-				->result_array();
-		}
-		
-// 		realname_get();
-		$uch['doing']['count'] = $count;
-		$uch['doing']['list'] = $list;
-		$uch['mood']['list'] = $moodlist;
-		$this->load->vars('uch', $uch);
+		$this->load->vars('user', $user);
+		$this->load->vars('count', $count);
+		$this->load->vars('list', $list);
 		$this->template->build('index');
 	}
 	

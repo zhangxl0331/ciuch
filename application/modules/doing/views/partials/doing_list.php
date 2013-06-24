@@ -1,7 +1,7 @@
-{{ if uch:doing:count }}
+{{ if count }}
 <div class="doing_list">
 	<ol>
-	{{ uch:doing:list }}
+	{{ list }}
 		<li id="dl$basevalue[doid]">
 			<div class="avatar48"><a href="space.php?uid={{ uid }}"><img src="<!--{avatar($basevalue[uid],small)}-->" alt="{{ username }}" /></a></div>
 			<div class="doing">
@@ -29,7 +29,7 @@
 				<!--{/if}-->
 			</div>
 		</li>
-	{{ /uch:doing:list }}
+	{{ /list }}
 	</ol>
 	<div class="page">$multi</div>
 </div>

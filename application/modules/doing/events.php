@@ -8,6 +8,7 @@ class Events_Doing
     {
         $this->CI =& get_instance();      
         $this->CI->load->model('doing/doing_m');
+        $this->CI->load->language('doing/doing');
         
         $this->module = 'doing';
 		
