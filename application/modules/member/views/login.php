@@ -25,9 +25,9 @@
 	<tr>
 		<th width="100" style="vertical-align: top;">请先回答问题</th>
 		<td>
-			{{ spam:question noloop=1 }}
+			{{ spam:question }}
 			<p>{{ question }}</p>
-			<input type="hidden" value="{{ answer }}" name="answer">
+			<input type="hidden" value="{{ answer }}" id="verify" name="verify">
 			{{ /spam:question }}
 			<input type="text" id="seccode" name="seccode" value="" tabindex="1" class="t_input" onBlur="checkSeccode()" />&nbsp;<span id="checkseccode">&nbsp;</span>
 		</td>
@@ -36,10 +36,9 @@
 	<tr>
 		<th width="100" style="vertical-align: top;">验证码</th>
 		<td>
-			{{ spam:captcha noloop=1 }}
+			{{ spam:captcha }}
 			{{ image }}
-			<input type="hidden" value="{{ word }}" name="word">
-			<input type="hidden" value="{{ time }}" name="time">
+			<input type="hidden" value="{{ word }}" id="verify" name="verify">
 			{{ /spam:captcha }}
 			<p>请输入上面的字母或数字，看不清可<a href="javascript:updateseccode()">更换一张</a></p>
 			<input type="text" id="seccode" name="seccode" value="" tabindex="1" class="t_input" onBlur="checkSeccode()" />&nbsp;<span id="checkseccode">&nbsp;</span>
@@ -66,47 +65,29 @@
 <?=form_close()?>
 
 <script type="text/javascript">
-	var lastSecCode = '';
 	function checkSeccode() {
-		var seccodeVerify = $('seccode').value;
-		if(seccodeVerify == lastSecCode) {
+		if(seccode == '') 
+		{
 			return;
-		} else {
-			lastSecCode = seccodeVerify;
+		} 
+		if($("#seccode").val().toLowerCase() == $("#verify").val().toLowerCase())
+		{	
+			$("#checkseccode").html('<img src="image/check_right.gif" width="13" height="13">');
 		}
-		ajaxresponse('checkseccode', 'op=checkseccode&seccode=' + (is_ie && document.charset == 'utf-8' ? encodeURIComponent(seccodeVerify) : seccodeVerify));
-	}
-	function ajaxresponse(objname, data) {
-		var x = new Ajax('XML', objname);
-		x.get('do.php?ac=$_SCONFIG[register_action]&' + data, function(s){
-			var obj = $(objname);
-			s = trim(s);
-			if(s.indexOf('succeed') > -1) {
-				obj.style.display = '';
-				obj.innerHTML = '<img src="image/check_right.gif" width="13" height="13">';
-				obj.className = "warning";
-			} else {
-				warning(obj, s);
-			}
-		});
-	}
-	function warning(obj, msg) {
-		if((ton = obj.id.substr(5, obj.id.length)) != 'password2') {
-			$(ton).select();
+		else
+		{
+			$("#checkseccode").html('<img src="image/check_error.gif" width="13" height="13"> &nbsp; <?=lang('incorrect_code')?>');
 		}
-		obj.style.display = '';
-		obj.innerHTML = '<img src="image/check_error.gif" width="13" height="13"> &nbsp; ' + msg;
-		obj.className = "warning";
 	}
 
+	function updateseccode() {
+		$.get("<?=site_url('member/api/captcha.json')?>",function(data){
+			$("#verify").parent().children('img').remove();
+			$("#verify").parent().prepend(data.image);
+			$("#verify").val(data.word);
+		},"json");
+	}
 </script>
-
-<!--{if $_SGLOBAL['input_seccode']}-->
-<script>
-$('seccode').style.background = '#FFFFCC';
-$('seccode').focus();
-</script>
-<!--{/if}-->
 
 
 <div class="c_form">
@@ -117,7 +98,7 @@ $('seccode').focus();
 	</caption>
 	<tr>
 		<td>
-		<a href="do.php?ac=$_SCONFIG[register_action]" style="display: block; margin: 0 110px 2em; width: 100px; border: 1px solid #486B26; background: #76A14F; line-height: 30px; font-size: 14px; text-align: center; text-decoration: none;"><strong style="display: block; border-top: 1px solid #9EBC84; color: #FFF; padding: 0 0.5em;">立即注册</strong></a>
+		<a href="<?=site_url('member/'.$config['register_action'])?>" style="display: block; margin: 0 110px 2em; width: 100px; border: 1px solid #486B26; background: #76A14F; line-height: 30px; font-size: 14px; text-align: center; text-decoration: none;"><strong style="display: block; border-top: 1px solid #9EBC84; color: #FFF; padding: 0 0.5em;">立即注册</strong></a>
 		</td>
 	</tr>
 </table>

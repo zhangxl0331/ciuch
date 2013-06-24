@@ -36,7 +36,7 @@ class Spam_m extends MY_Model
 	{
 		return create_captcha(array(
 				'img_path' => APPPATH.'cache/captcha/',
-				'img_url' => base_url(APPPATH.'cache/captcha/')
+				'img_url' => base_url(APPPATH.'cache/captcha').'/'
 		));
 	}
 }

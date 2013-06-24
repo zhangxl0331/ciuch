@@ -9,12 +9,7 @@
 {{ if global:space:realname }}{{ global:space:username }} - {{ endif }}
 {{ config:sitename }} - Powered by {{ config:sitename }}
 </title>
-{{ theme:js file="script_cookie.js" }}
-{{ theme:js file="script_common.js" }}
-{{ theme:js file="script_menu.js" }}
-{{ theme:js file="script_ajax.js" }}
-{{ theme:js file="script_face.js" }}
-{{ theme:js file="script_manage.js" }}
+{{ theme:js file="jquery-1.4.2.min.js" }}
 
 {{ if global:space:theme }}
 {{ theme:css file="style.css" theme=default }}
@@ -61,9 +56,9 @@
 	
 		<div class="nav_account">
 		{{ if auth:uid }}
-			<a href="{{ url:site }}space/uid-{{ auth:uid }}.html" class="login_thumb"><img src="{{avatar(sglobal[supe_uid],small)}}" alt="{{ global:space:realname }}" width="20" height="20" /></a>
-			<a href="{{ url:site }}space/uid-{{ auth:uid }}.html" class="loginName">{{ global:space:realname }}</a>
-			{{if global:space:realname != auth:username }}({{ auth:username }}){{endif}}
+			<a href="<?=site_url('member/index/'.$auth['uid'])?>" class="login_thumb"><img src="{{avatar(sglobal[supe_uid],small)}}" alt="{{ global:space:realname }}" width="20" height="20" /></a>
+			<a href="<?=site_url('member/index/'.$auth['uid'])?>" class="loginName">{{ auth:username }}</a>
+			
 			<br />
 			{{if not config:closeinvite }}<a href="cp.php?ac=invite">邀请</a> | {{ endif }}<a href="cp.php">设置</a> | <a href="cp.php?ac=privacy">隐私</a> | <a href="<?=site_url('member/logout')?>">退出</a>
 		{{ else }}

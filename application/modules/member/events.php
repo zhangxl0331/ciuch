@@ -7,6 +7,7 @@ class Events_Member
 	{
 		$this->CI =& get_instance();       
 		$this->CI->load->model(array('member/member_m'));
+		$this->CI->load->language(array('message'));
 		$this->module = 'member';
 
 		Events::register('checkauth', array($this, 'checkauth'));
