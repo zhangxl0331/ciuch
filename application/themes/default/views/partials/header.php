@@ -37,8 +37,8 @@
 		<h1 class="logo"><a href="index.php"><img src="{{ config:sitelogo }}" alt="{{ config:sitename }}" /></a></h1>
 		<ul class="menu">
 		{{ if auth:uid }}
-			<li><a href="space.php?do=home">首页</a></li>
-			<li><a href="space.php">个人主页</a></li>
+			<li><a href="<?=site_url('member/home')?>">首页</a></li>
+			<li><a href="<?=site_url('member/index/'.$auth['uid'])?>">个人主页</a></li>
 			<li><a href="space.php?do=friend">好友</a></li>
 		{{ else }}
 			<li><a href="index.php">首页</a></li>
