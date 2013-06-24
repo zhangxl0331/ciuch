@@ -15,7 +15,7 @@ class Member extends MY_Controller {
 	{
 		if($auth = $this->load->get_var('auth')) 
 		{
-			redirect(site_url('member/index/'.$auth['uid']));
+			redirect(site_url('member/home'));
 		}
 
 		$username = trim($this->input->get_post('username'));
@@ -56,7 +56,7 @@ class Member extends MY_Controller {
 			set_cookie('loginuser', $setarr['username'], 31536000);
 			set_cookie('_refer', '');
 			$this->load->helper('url');
-			redirect(site_url('member/index/'.$setarr['uid']));
+			redirect(site_url('member/home'));
 			$ucsynlogin = uc_user_synlogin($setarr['uid']);
 			exit;
 			
@@ -144,6 +144,11 @@ class Member extends MY_Controller {
 	
 	public function home()
 	{
+		if( ! $auth = $this->load->get_var('auth'))
+		{
+			$config = $this->load->get_var('config');
+			redirect(site_url('member/'.$config['login_action']));
+		}
 		// 		$uch = $this->load->get_var('uch');
 		// 		if($_GET['view'] == 'guide') {
 		// 			redirect(base_url('space/guide'));

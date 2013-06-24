@@ -1,28 +1,24 @@
-<!--{eval $_TPL['titles'] = array('首页动态');}-->
-<!--{template header}-->
-
 <div id="content">
 
-<!--{if $space[self]}-->
 	<div class="composer_header">
 	
-		<div class="ar_r_t"><div class="ar_l_t"><div class="ar_r_b"><div class="ar_l_b"><img src="<!--{avatar($_SGLOBAL[supe_uid],middle)}-->" alt="{$_SN[$_SGLOBAL[supe_uid]]}" width="120" /></div></div></div></div>
+		<div class="ar_r_t"><div class="ar_l_t"><div class="ar_r_b"><div class="ar_l_b"><img src="<!--{avatar($_SGLOBAL[supe_uid],middle)}-->" alt="<?=$auth['username']?>" width="120" /></div></div></div></div>
 		
 		<div class="composer">
 			<h3 class="index_name">
-				<a href="space.php?uid=$space[uid]"<!--{eval g_color($space[groupid]);}-->>{$_SN[$space[uid]]}</a>
+				<a href="<?=site_url('member/'.$auth['uid'])?>"<!--{eval g_color($space[groupid]);}-->><?=$auth['username']?></a>
 				<!--{eval g_icon($space[groupid]);}-->
 			</h3>
 			<p>
-				已有 <a href="space.php?uid=$space[uid]&do=friend&view=visitor">$space[viewnum]</a> 人次访问, <a href="cp.php?ac=credit">$space[credit]</a>个积分 <a href="cp.php?ac=credit">$space[creditstar]</a>
+				已有 <a href="space.php?uid=$space[uid]&do=friend&view=visitor"><?=$auth['viewnum']?></a> 人次访问, <a href="cp.php?ac=credit"><?=$auth['credit']?></a>个积分 <a href="cp.php?ac=credit"><?=$auth['creditstar']?></a>
 			</p>
 			<div class="current_status" id="mystate">
-				<!--{if $space[mood]}--><a href="space.php?uid=$space[uid]&do=mood" title="同心情"><img src="image/face/{$space[mood]}.gif" alt="同心情" class="face" /></a> <!--{/if}-->
-				<!--{if $space[spacenote]}-->
+				<?php if($auth['mood']):?><a href="space.php?uid=$space[uid]&do=mood" title="同心情"><img src="image/face/{$space[mood]}.gif" alt="同心情" class="face" /></a> <?php endif;?>
+				<?php if($auth['spacenote']):?>
 					$space[spacenote]
-				<!--{elseif empty($space[mood])}-->
+				<?php elseif(empty($auth['mood'])):?>
 					您在做什么？
-				<!--{/if}-->
+				<?php endif;?>
 				&nbsp;(<a href="javascript:;" onclick="mood_from();" title="更新状态">更新状态</a><span class="pipe">|</span><a href="space.php?uid=$space[uid]&do=mood">同心情</a>)
 			</div>
 			
@@ -64,12 +60,7 @@
 		</ul>
 		<!--{/if}-->
 	</div>
-<!--{else}-->
-<!--{eval 
-	$_TPL['spacetitle'] = "动态";
-}-->
-	<!--{template space_menu}-->
-<!--{/if}-->
+
 	
 	<div class="feed">
 	
