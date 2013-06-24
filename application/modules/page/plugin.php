@@ -13,7 +13,7 @@ class Plugin_Page extends Plugin
 
 	public function __construct()
 	{
-		$this->load->model('spam/spam_m');
+		
 	}
 	/**
 	 * Execute whitelisted php functions
@@ -26,15 +26,5 @@ class Plugin_Page extends Plugin
 	public function __call($name, $args)
 	{
 		
-	}
-	
-	public function question()
-	{
-		return $this->spam_m->question();
-	}
-	
-	public function captcha()
-	{
-		return $this->spam_m->captcha();
 	}
 }
