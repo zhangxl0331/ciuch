@@ -1,8 +1,3 @@
-
-
-
-
-
 	<div id="space_page">
 
 		<div id="ubar">

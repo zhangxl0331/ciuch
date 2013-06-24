@@ -114,7 +114,7 @@
 		
 		{{ else }}
 			<div class="bar_text">
-				<form id="loginform" name="loginform" action="do.php?ac={{ config:login_action }}&ref" method="post">
+				<form id="loginform" name="loginform" action="<?=site_url('member/'.$config['login_action'])?>" method="post">
 				<input type="hidden" name="formhash" value="" />
 					<p class="title">登录站点</p>
 					<p>用户名</p>
@@ -124,7 +124,7 @@
 					<p><input type="checkbox" id="cookietime" name="cookietime" value="315360000" checked /><label for="cookietime">记住我</label></p>
 					<p>
 						<input type="submit" id="loginsubmit" name="loginsubmit" value="登录" class="submit"  />
-						<a href="{{ url:site }}member/{{ config:register_action }}" class="button">注册</a>
+						<a href="<?=site_url('member/'.$config['register_action'])?>" class="button">注册</a>
 					</p>
 				</form>
 			</div>
