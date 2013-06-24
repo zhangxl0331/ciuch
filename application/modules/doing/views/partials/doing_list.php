@@ -19,7 +19,7 @@
 				
 				<!--{loop $clist[$basevalue[doid]] $value}-->
 					<li style="margin-left: {$value[layer]}em;<!--{if $value[id]==$_GET[highlight]}-->color:red;font-weight:bold;<!--{/if}-->">
-					<a href="space.php?uid=$value[uid]">{$_SN[$value[uid]]}</a>: $value[message] <span class="doingtime">(<!--{date('m-d H:i',$value[dateline],1)}-->)</span> 
+					<a href="space.php?uid=$value[uid]">$value[username]</a>: $value[message] <span class="doingtime">(<!--{date('m-d H:i',$value[dateline],1)}-->)</span> 
 					<a href="cp.php?ac=doing&op=comment&doid=$value[doid]&id=$value[id]" id="do_comment_{$value[doid]}_{$value[id]}" onclick="ajaxmenu(event, this.id, 99999, '', -1)" class="re">回复</a>
 					<!--{if $value[uid]==$_SGLOBAL[supe_uid] || $basevalue[uid] == $_SGLOBAL[supe_uid]}--> <a href="cp.php?ac=doing&op=delete&doid=$value[doid]&id=$value[id]" id="doing_delete_{$value[doid]}_{$value[id]}" onclick="ajaxmenu(event, this.id, 99999)" class="gray">删除</a><!--{/if}-->
 					</li>
