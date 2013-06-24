@@ -1,11 +1,11 @@
 {{ if count }}
 <div class="doing_list">
 	<ol>
-	{{ list }}
+	<?php foreach($list as $value):?>
 		<li id="dl$basevalue[doid]">
-			<div class="avatar48"><a href="space.php?uid={{ uid }}"><img src="<!--{avatar($basevalue[uid],small)}-->" alt="{{ username }}" /></a></div>
+			<div class="avatar48"><a href="<?=site_url('member/index/'.$value['uid'])?>"><img src="<!--{avatar($basevalue[uid],small)}-->" alt="<?=$value['username']?>" /></a></div>
 			<div class="doing">
-				<div class="doingcontent"><a href="space.php?uid={{ uid }}">{{ username }}</a>: <span>{{ message }}</span> 
+				<div class="doingcontent"><a href="<?=site_url('member/index/'.$value['uid'])?>"><?=$value['username']?></a>: <span><?=$value['message']?></span> 
 				<a href="cp.php?ac=doing&op=comment&doid=$basevalue[doid]" id="do_comment_{{ doid }}" onclick="ajaxmenu(event, this.id, 99999, '', -1)" class="re">回复</a>
 				{{ if uch:space:self }} <a href="cp.php?ac=doing&op=delete&doid={{ doid }}&id={{ id }}" id="doing_delete_{{ doid }}_{{ id }}" onclick="ajaxmenu(event, this.id, 99999)" class="re gray">删除</a>{{ endif }}
 				</div>
@@ -29,7 +29,7 @@
 				<!--{/if}-->
 			</div>
 		</li>
-	{{ /list }}
+	<?php endforeach;?>
 	</ol>
 	<div class="page">$multi</div>
 </div>
