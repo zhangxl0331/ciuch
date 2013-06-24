@@ -6,8 +6,8 @@
 		
 		<div class="composer">
 			<h3 class="index_name">
-				<a href="<?=site_url('member/'.$auth['uid'])?>"<!--{eval g_color($space[groupid]);}-->><?=$auth['username']?></a>
-				<!--{eval g_icon($space[groupid]);}-->
+				<a href="<?=site_url('member/'.$auth['uid'])?>"<?php if(isset($usergroup)):?> style="color: <?=$usergroup[$auth['groupid']]['color']?>"<?php endif;?>><?=$auth['username']?></a>
+				{ g_icon }
 			</h3>
 			<p>
 				已有 <a href="space.php?uid=$space[uid]&do=friend&view=visitor"><?=$auth['viewnum']?></a> 人次访问, <a href="cp.php?ac=credit"><?=$auth['credit']?></a>个积分 <a href="cp.php?ac=credit"><?=$auth['creditstar']?></a>
@@ -32,9 +32,9 @@
 	</div>
 	
 	<div class="mgs_list">
-		<!--{if !empty($_SGLOBAL['member']['notenum'])}-->
-		<div><img src="image/icon/notice.gif"><a href="space.php?do=notice"><strong>{$_SGLOBAL['member']['notenum']}</strong> 条新通知</a></div>
-		<!--{/if}-->
+		<?php if(!empty($auth['notenum'])):?>
+		<div><img src="image/icon/notice.gif"><a href="space.php?do=notice"><strong><?=$auth['notenum']?></strong> 条新通知</a></div>
+		<?php endif;?>
 		<!--{if $addfriendcount}--><div><img src="image/icon/friend.gif" alt="" /><a href="cp.php?ac=friend&op=request"><strong>$addfriendcount</strong> 个好友请求</a></div><!--{/if}-->
 		<!--{if $mtaginvitecount}--><div><img src="image/icon/mtag.gif" alt="" /><a href="cp.php?ac=mtag&op=mtaginvite"><strong>$mtaginvitecount</strong> 个群组邀请</a></div><!--{/if}-->
 		<!--{if $myinvitecount}--><div><img src="image/icon/userapp.gif" alt="" /><a href="space.php?do=notice&view=userapp"><strong>$myinvitecount</strong> 个应用消息</a></div><!--{/if}-->
