@@ -2,11 +2,11 @@
 
 function sgmdate($dateformat, $timestamp='', $format=0, $timeoffset=0) {
 	if(empty($timestamp)) {
-		$timestamp = time() + $timeoffset * 3600;
+		$timestamp = time();
 	}
 	$result = '';
 	if($format) {
-		$time = time() + $timeoffset * 3600 - $timestamp;
+		$time = time() - $timestamp;
 		if($time > 24*3600) {
 			$result = gmdate($dateformat, $timestamp + $timeoffset * 3600);
 		} elseif ($time > 3600) {

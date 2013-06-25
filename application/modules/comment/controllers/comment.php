@@ -5,7 +5,7 @@ class Comment extends MY_Controller {
 	function __construct()
 	{
 		parent::__construct();
-		$this->load->model('blog/blog_m');
+		$this->load->model('comment/comment_m');
 	}
 	/**
 	 * Index Page for this controller.

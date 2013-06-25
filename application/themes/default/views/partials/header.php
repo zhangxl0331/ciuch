@@ -78,11 +78,11 @@
 		<div id="app_sidebar">
 		{{ if auth:uid }}
 			<ul class="app_list" id="default_userapp">
-				<li><img src="image/app/doing.gif"><a href="space.php?do=doing">记录</a></li>
-				<li><img src="image/app/album.gif"><a href="space.php?do=album">相册</a><em><a href="cp.php?ac=upload">上传</a></em></li>
-				<li><img src="image/app/blog.gif"><a href="space.php?do=blog">日志</a><em><a href="cp.php?ac=blog">发表</a></em></li>
-				<li><img src="image/app/mtag.gif"><a href="space.php?do=thread">群组</a><em><a href="cp.php?ac=thread">话题</a></em></li>
-				<li><img src="image/app/share.gif"><a href="space.php?do=share">分享</a></li>
+				<li><img src="image/app/doing.gif"><a href="<?=site_url('doing/index/'.$auth['uid'])?>">记录</a></li>
+				<li><img src="image/app/album.gif"><a href="<?=site_url('album/index/'.$auth['uid'])?>">相册</a><em><a href="cp.php?ac=upload">上传</a></em></li>
+				<li><img src="image/app/blog.gif"><a href="<?=site_url('blog/index/'.$auth['uid'])?>">日志</a><em><a href="cp.php?ac=blog">发表</a></em></li>
+				<li><img src="image/app/mtag.gif"><a href="<?=site_url('thread/index/'.$auth['uid'])?>">群组</a><em><a href="cp.php?ac=thread">话题</a></em></li>
+				<li><img src="image/app/share.gif"><a href="<?=site_url('share/index/'.$auth['uid'])?>">分享</a></li>
 				
 			{{ if config:my_status }}
 				{{ userapp:default_menu }}

@@ -37,7 +37,7 @@
  * @param	string	server path to font
  * @return	string
  */
-if ( ! function_exists('show_message'))
+if ( ! function_exists('showmessage'))
 {
 	function showmessage($msgkey, $url_forward='', $second=1, $values=array()) 
 	{				
@@ -85,21 +85,23 @@ if ( ! function_exists('show_message'))
 			} else {
 				if($url_forward) {
 					$message = "<a href=\"$url_forward\">$message</a><script>setTimeout(\"window.location.href ='$url_forward';\", ".($second*1000).");</script>";
-				}
-				include(APPPATH.'errors/error_message.php');
-				$message = ob_get_contents();
-				ob_end_clean();
-				if (function_exists('ob_gzhandler')) {
-					ob_start('ob_gzhandler');
+					$url_forward = "<a href=\"$url_forward\">页面跳转中...</a>";
 				} else {
-					ob_start();
+					$url_forward = "<a href=\"javascript:history.go(-1);\">返回上一页</a> | <a href=\"index.php\">返回首页</a>";
 				}
-				
-				$template = &load_class('Template', 'libraries', '');
-// 				$header = $template->build('header', array(), TRUE);
-// 				$footer = $template->build('footer', array(), TRUE);
-// 				$message = $header.$message.$footer;				
-				echo $message;
+				$body = '
+				<div class="showmessage">
+					<div class="ye_r_t"><div class="ye_l_t"><div class="ye_r_b"><div class="ye_l_b">
+						<caption>
+							<h2>信息提示</h2>
+						</caption>
+						<p>'.$message.'</p>
+						<p class="op">'.$url_forward.'</p>
+					</div></div></div></div>
+				</div>
+';
+				$template = $loader->load->library('Template');
+				$template->_body = $body;
 			}
 		}
 		exit();

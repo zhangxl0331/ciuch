@@ -21,7 +21,6 @@ class Plugin_Comment extends Plugin
 	 */
 	public function __call($name, $args)
 	{
-		$this->load->library('comment/comment');
-		return $this->comment->get($name);
+
 	}
 }
