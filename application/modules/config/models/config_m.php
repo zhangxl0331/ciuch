@@ -89,4 +89,39 @@ class Config_m extends MY_Model
 	function ipbanned($ipbanned) {
 		return empty($ipbanned)?false:preg_match("/^(".str_replace(array("\r\n", ' '), array('|', ''), preg_quote($ipbanned, '/')).")/", $this->input->ip_address());
 	}
+	
+	public function ckrealname($type)
+	{
+		$config = $this->load->get_var('config');
+		$auth = $this->load->get_var('auth');
+		return $config['realname'] && empty($auth['namestatus']) && empty($config['name_allow'.$type]);
+	}
+	
+	public function cknewusertime()
+	{
+		$config = $this->load->get_var('config');
+		$auth = $this->load->get_var('auth');
+		return $config['newusertime'] && time()-$auth['dateline']<$config['newusertime']*3600;
+	}
+	
+	public function ckavatar()
+	{
+		$config = $this->load->get_var('config');
+		$auth = $this->load->get_var('auth');
+		return $config['need_avatar'] && empty($auth['avatar']);
+	}
+	
+	public function ckfriendnum()
+	{
+		$config = $this->load->get_var('config');
+		$auth = $this->load->get_var('auth');
+		return $config['need_friendnum'] && $auth['friendnum']<$config['need_friendnum'];
+	}
+	
+	public function ckemail()
+	{
+		$config = $this->load->get_var('config');
+		$auth = $this->load->get_var('auth');
+		return $config['need_email'] && empty($auth['emailcheck']);
+	}
 }

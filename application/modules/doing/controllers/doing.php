@@ -53,49 +53,22 @@ class Doing extends MY_Controller {
 			redirect(site_url('member/'.$config['login_action']));
 		}
 
-		if(isset($usergroup[$auth['groupid']]['allowdoing']) AND empty($usergroup[$auth['groupid']]['allowdoing']))
-		{
-			$this->load->vars(array('message'=>lang('no_privilege'), 'url_forword'=>'', 'second'=>1));
-			exit($this->template->build('showmessage', array(), TRUE));
-		}
+		Events::trigger('checkperm', 'allowdoing');
 		
-		if($config['realname'] && empty($auth['namestatus']) && empty($config['name_allowdoing'])) {
-			$this->load->vars(array('message'=>lang('no_privilege_realname'), 'url_forword'=>'', 'second'=>1));
-			exit($this->template->build('showmessage', array(), TRUE));
-		}
+		Events::trigger('ckrealname', 'doing');
 		
-		if($config['newusertime'] && time()-$auth['dateline']<$config['newusertime']*3600) {
-			$this->load->vars(array('message'=>sprintf(lang('no_privilege_realname'), $config['newusertime']), 'url_forword'=>'', 'second'=>1));
-			exit($this->template->build('showmessage', array(), TRUE));
-		}
-		//��Ҫ�ϴ�ͷ��
-		if($config['need_avatar'] && empty($auth['avatar'])) {
-			$this->load->vars(array('message'=>lang('no_privilege_avatar'), 'url_forword'=>'', 'second'=>1));
-			exit($this->template->build('showmessage', array(), TRUE));
-		}
-		//ǿ�����û����Ѹ���
-		if($config['need_friendnum'] && $auth['friendnum']<$config['need_friendnum']) {
-			$this->load->vars(array('message'=>sprintf(lang('no_privilege_friendnum'), $config['need_friendnum']), 'url_forword'=>'', 'second'=>1));
-			exit($this->template->build('showmessage', array(), TRUE));
-		}
-		//ǿ�����û����Ѹ���
-		if($config['need_email'] && empty($auth['emailcheck'])) {
-			$this->load->vars(array('message'=>lang('no_privilege_email'), 'url_forword'=>'', 'second'=>1));
-			exit($this->template->build('showmessage', array(), TRUE));
-		}
+		Events::trigger('cknewusertime');
 		
-		if(isset($usergroup[$auth['groupid']]['seccode']) AND ! empty($usergroup[$auth['groupid']]['seccode']) && strcasecmp($_POST['seccode'], $_POST['verify']) == 0) {
-			$this->load->vars(array('message'=>lang('incorrect_code'), 'url_forword'=>'', 'second'=>1));
-			exit($this->template->build('showmessage', array(), TRUE));
-		}
+		Events::trigger('ckavatar');
 		
-		if(isset($usergroup[$auth['groupid']]['postinterval']) AND !empty($usergroup[$auth['groupid']]['postinterval']))
-		{
-			if($waittime = $usergroup[$auth['groupid']]['postinterval'] - (time() - $auth['lastpost']) > 0) {
-				$this->load->vars(array('message'=>sprintf(lang('operating_too_fast'), $waittime), 'url_forword'=>'', 'second'=>1));
-				exit($this->template->build('showmessage', array(), TRUE));
-			}
-		}
+		Events::trigger('ckfriendnum');
+		
+		Events::trigger('ckemail');
+		
+		Events::trigger('ckinterval', 'post');
+		
+		Events::trigger('ckseccode');
+
 		
 		$this->load->library('form_validation');
 		

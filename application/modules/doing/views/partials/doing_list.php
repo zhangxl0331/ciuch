@@ -6,7 +6,7 @@
 			<div class="avatar48"><a href="<?=site_url('member/index/'.$value['uid'])?>"><img src="<!--{avatar($basevalue[uid],small)}-->" alt="<?=$value['username']?>" /></a></div>
 			<div class="doing">
 				<div class="doingcontent"><a href="<?=site_url('member/index/'.$value['uid'])?>"><?=$value['username']?></a>: <span><?=$value['message']?></span> 
-				<a href="cp.php?ac=doing&op=comment&doid=$basevalue[doid]" id="do_comment_{{ doid }}" onclick="ajaxmenu(event, this.id, 99999, '', -1)" class="re">回复</a>
+				<a href="<?=site_url('comment/add/doing/'.$value['doid'])?>" id="do_comment_<?=$value['doid']?>" onclick="ajaxmenu(event, this.id, 99999, '', -1)" class="re">回复</a>
 				<?php if($auth && $auth['uid']==$user['uid']):?> <a href="<?=site_url('doing/delete/'.$value['doid'])?>" id="doing_delete_{{ doid }}_{{ id }}" onclick="ajaxmenu(event, this.id, 99999)" class="re gray">删除</a><?php endif;?>
 				</div>
 				<div class="doingtime">(<?=sgmdate('m-d H:i', $value['dateline'], 1, $config['timeoffset'])?>)</div>

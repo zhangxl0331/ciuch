@@ -33,18 +33,44 @@ class Comment extends MY_Controller {
 	 *
 	 * @param string $slug The slug of the blog post.
 	 */
-	public function view($id = '')
+	public function add($module, $id)
 	{
-		if ( ! $id OR ! $blog = $this->blog_m->get_blog($id))
+		$config = $this->load->get_var('config');
+		$auth = $this->load->get_var('auth');
+		$usergroup = $this->load->get_var('usergroup');
+		if(empty($auth['uid']))
 		{
-			redirect('blog');
+			redirect(site_url('member/'.$config['login_action']));
 		}
 		
-		$this->template
-		->title($blog->subject, '日志')
-		->set_breadcrumb($blog->subject)
-		->set('blog', $blog)
-		->build('view');	
+		Events::trigger('checkperm', 'allowcomment');
+		
+		Events::trigger('ckrealname', 'comment');
+		
+		Events::trigger('cknewusertime');
+		
+		Events::trigger('ckavatar');
+		
+		Events::trigger('ckfriendnum');
+		
+		Events::trigger('ckemail');
+		
+		Events::trigger('ckinterval', 'post');
+		
+
+// 		if ( ! $id OR ! $blog = $this->blog_m->get_blog($id))
+// 		{
+// 			redirect('blog');
+// 		}
+		$this->load->library('form_validation');
+		
+		$this->form_validation->set_rules('message', '', 'required');
+		if($this->form_validation->run())
+		{
+			
+		}
+		$data = array('module'=>$module, 'id'=>$id);
+		$this->template->build('add', $data);	
 	}
 }
 
