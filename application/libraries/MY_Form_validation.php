@@ -245,6 +245,27 @@ class MY_Form_validation extends CI_Form_validation
 
 	// --------------------------------------------------------------------------
 
+	/**
+	 * Match one field to another
+	 *
+	 * @access	public
+	 * @param	string
+	 * @param	field
+	 * @return	bool
+	 */
+	public function imatches($str, $field)
+	{
+		if ( ! isset($_POST[$field]))
+		{
+			return FALSE;
+		}
+	
+		$field = $_POST[$field];
+	
+		return (strcasecmp($str, $field) !== 0) ? FALSE : TRUE;
+	}
+	
+	// --------------------------------------------------------------------
 }
 
 /* End of file MY_Form_validation.php */
