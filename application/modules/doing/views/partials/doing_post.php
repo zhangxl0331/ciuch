@@ -7,7 +7,7 @@
 			<table cellspacing="0" cellpadding="0" width="100%">
 			<tr>
 			<td><a href="###" id="face" onclick="showFace(this.id, 'message');"><img src="image/facelist.gif" align="absmiddle" /></a></td>
-			<?php if(isset($usergroup[$auth['groupid']]['allowdoing']) AND ! empty($usergroup[$auth['groupid']]['allowdoing'])):?>
+			<?php if(isset($usergroup[$auth['groupid']]['seccode']) AND ! empty($usergroup[$auth['groupid']]['seccode'])):?>
 			<td>
 				<?php if($config['questionmode']):?>
 				请先回答提问：{{ spam:question }}{{ question }}<input type="hidden" value="{{ answer }}" id="verify" name="verify">{{ /spam:question }}
