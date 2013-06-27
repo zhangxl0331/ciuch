@@ -29,6 +29,11 @@ class Doing extends MY_Controller {
 			redirect(site_url('doing/index/'.$user['uid']).'/'.ceil($count/$perpage));
 		}
 		$list = $this->doing_m->db->where('uid', $uid)->order_by('dateline DESC')->get('doing', $perpage, $start)->result_array();
+		foreach($list as $key=>$value)
+		{
+			$this->load->model('comment/comment_m');
+			$list[$key]['comment'] = $this->comment_m->db->where(array('idtype'=>'doing', 'id'=>$value['doid']))->get('comment')->result_array();
+		}
 
 		$config['base_url'] = site_url('doing/index/'.$user['uid']);
 		$config['total_rows'] = $count;
@@ -72,7 +77,8 @@ class Doing extends MY_Controller {
 		
 		$this->load->library('form_validation');
 		
-		$this->form_validation->set_rules('message', '', 'required');
+		$this->form_validation->set_rules('message', '', 'required|max_length[200]');
+		$this->form_validation->set_message('required', lang('should_write_that'));
 		if($this->form_validation->run())
 		{
 			$setarr = array(
@@ -88,8 +94,8 @@ class Doing extends MY_Controller {
 			redirect(site_url('doing/index/'.$auth['uid']));
 		}
 		else 
-		{
-			$this->load->vars(array('message'=>lang('should_write_that'), 'url_forword'=>'', 'second'=>1));
+		{			
+			$this->load->vars(array('message'=>validation_errors(), 'url_forword'=>'', 'second'=>1));
 			exit($this->template->build('showmessage', array(), TRUE));
 		}		
 		$this->template->build('add');

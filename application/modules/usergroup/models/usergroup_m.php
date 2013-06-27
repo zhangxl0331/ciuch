@@ -79,7 +79,8 @@ class Usergroup_m extends MY_Model
 	{
 		$auth = $this->load->get_var('auth');
 		$usergroup = $this->load->get_var('usergroup');
-		return empty($usergroup[$auth['groupid']][$permtype])?'':$usergroup[$auth['groupid']][$permtype];
+// 		echo '<PRe>';var_dump($usergroup);exit;
+		return $usergroup[$auth['groupid']][$permtype];
 	}
 	
 	public function ckinterval($type)
@@ -98,6 +99,12 @@ class Usergroup_m extends MY_Model
 	{
 		$auth = $this->load->get_var('auth');
 		$usergroup = $this->load->get_var('usergroup');
-		return isset($usergroup[$auth['groupid']]['seccode']) AND ! empty($usergroup[$auth['groupid']]['seccode']) && strcasecmp($_POST['seccode'], $_POST['verify']) == 0;
+		
+		if( ! empty($usergroup[$auth['groupid']]['seccode']))
+		{
+			$this->load->library('form_validation');
+			$this->form_validation->set_rules('seccode', '', 'imatches[verify]');
+			$this->form_validation->set_message('imatches', lang('incorrect_code'));
+		}
 	}
 }

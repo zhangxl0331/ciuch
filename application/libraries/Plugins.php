@@ -83,10 +83,9 @@ abstract class Plugin
 	 */
 	public function module_view($module, $view, $vars = array())
 	{
-
-		if (file_exists($this->template->get_theme_path().'modules/'.$module.'/views/'.$view.(pathinfo($view, PATHINFO_EXTENSION) ? '' : EXT)))
+		if (file_exists($this->template->get_theme_path().'modules/'.$module.'/'.$view.(pathinfo($view, PATHINFO_EXTENSION) ? '' : EXT)))
 		{
-			$path = $this->template->get_theme_path().'modules/'.$module.'/views/';
+			$path = $this->template->get_theme_path().'modules/'.$module.'/'.$view.(pathinfo($view, PATHINFO_EXTENSION) ? '' : EXT);
 		}
 		else
 		{
@@ -94,13 +93,24 @@ abstract class Plugin
 			{
 				if (file_exists($location.$module.'/views/'.$view.(pathinfo($view, PATHINFO_EXTENSION) ? '' : EXT)))
 				{
-					$path = $location.$module.'/views/';
+					$path = $location.$module.'/views/'.$view.(pathinfo($view, PATHINFO_EXTENSION) ? '' : EXT);
 					break;
 				}
-			}
+			}			
 		}
-		
-		return $this->template->_load_view($view, $vars, TRUE, $path);
+
+		// save the existing view array so we can restore it
+		//$save_path = $this->load->get_view_paths();
+
+		// add this view location to the array
+		//$this->load->set_view_path($path);
+
+		$content = $this->load->_ci_load(array('_ci_path' => $path, '_ci_vars' => ((array)$vars), '_ci_return' => TRUE));
+
+		// Put the old array back
+		//$this->load->set_view_path($save_path);
+
+		return $content;
 	}
 }
 

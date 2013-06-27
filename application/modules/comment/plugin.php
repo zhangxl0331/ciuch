@@ -23,4 +23,5 @@ class Plugin_Comment extends Plugin
 	{
 
 	}
+
 }

@@ -49,64 +49,15 @@ class MY_Parser extends CI_Parser {
 	 * @param	bool
 	 * @return	string
 	 */
-	public function parse($view, $data = array(), $return = FALSE, $is_include = FALSE)
-	{				
-		$view = (pathinfo($view, PATHINFO_EXTENSION)) ? $view : $view.EXT;
+	public function parse($template, $data = array(), $return = FALSE, $is_include = FALSE)
+	{
+		$string = $this->_ci->load->view($template, $data, TRUE);
 
-		$filepath = '';
-		
-		// Get module views
-		if (method_exists( $this->_ci->router, 'fetch_module' ))
-		{
-			$module = $this->_ci->router->fetch_module();
-			foreach (Modules::$locations as $location => $offset)
-			{
-				if (file_exists($location.$module.'/views/'.$view))
-				{
-					$filepath = $location.$module.'/views/'.$view;
-					break;
-				}
-			}
-		}
-		
-		// So there are no module views
-		foreach($this->_ci->load->get_package_paths() as $path)
-		{
-			if (file_exists($path.'views/'.$view))
-			{
-				$filepath = $path.'views/'.$view;
-				break;
-			}
-		}
-				
-		if (empty($filepath))
-		{
-			show_error('Unable to load the requested file: '.pathinfo($view, PATHINFO_BASENAME));
-		}
-		
-		$string = @file_get_contents($filepath);
-		
-		return $this->_parse($string, $data, $return, $is_include);		
+		return $this->_parse($string, $data, $return, $is_include);
 	}
 
 	// --------------------------------------------------------------------
-	
-	/**
-	 * Evaluates the PHP in the given string.
-	 *
-	 * @param   string  $text  Text to evaluate
-	 * @return  string
-	 */
-	public function parse_php($string)
-	{
-		$string = preg_replace("/<\?xml(.*?)\?>/Ui", "&lt;?xml\\1?&gt;", htmlspecialchars_decode($string));		
-		extract($this->_ci->load->_ci_cached_vars);		
-		ob_start();
-		echo eval('?>'.preg_replace("/;*\s*\?>/", "; ?>", str_replace('<?=', '<?php echo ', $string)));
-		
-		return ob_get_clean();
-	}
-	
+
 	/**
 	 *  String parse
 	 *
@@ -119,14 +70,8 @@ class MY_Parser extends CI_Parser {
 	 * @param	bool
 	 * @return	string
 	 */
-	public function parse_string($view, $data = array(), $return = FALSE, $is_include = FALSE)
+	public function parse_string($string, $data = array(), $return = FALSE, $is_include = FALSE)
 	{
-		if ( ! file_exists($view))
-		{
-			show_error('Unable to load the requested file: '.pathinfo($view, PATHINFO_BASENAME));
-		}
-		
-		$string = @file_get_contents($view);
 		return $this->_parse($string, $data, $return, $is_include);
 	}
 
@@ -152,26 +97,24 @@ class MY_Parser extends CI_Parser {
 		// Convert from object to array
 		is_array($data) or $data = (array) $data;
 
-		$this->_ci->load->_ci_cached_vars = array_merge($data, $this->_ci->load->_ci_cached_vars);
+		$data = array_merge($data, $this->_ci->load->_ci_cached_vars);
 
 		$parser = new Lex\Parser();
 		$parser->scopeGlue(':');
 		$parser->cumulativeNoparse(TRUE);
-		$string = preg_replace("/<\?xml(.*?)\?>/Uis", "&lt;?xml\\1?&gt;", $string);
-		$string = $parser->parse($string, $this->_ci->load->_ci_cached_vars, array($this, 'parser_callback'));		
-		$string = $this->parse_php($string);
-		$string = preg_replace("/&lt;\?xml(.*?)\?&gt;/Uis", "<?xml\\1?>", $string);
+		$parsed = $parser->parse($string, $data, array($this, 'parser_callback'));
+		
 		// Finish benchmark
 		$this->_ci->benchmark->mark('parse_end');
 		
 		// Return results or not ?
 		if ( ! $return)
 		{
-			$this->_ci->output->append_output($string);
+			$this->_ci->output->_display($parsed);
 			return;
 		}
 
-		return $string;
+		return $parsed;
 	}
 
 	// --------------------------------------------------------------------

@@ -1,4 +1,4 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php defined('BASEPATH') OR exit('No direct script access allowed');
 
 /**
  * CodeIgniter Template Class
@@ -102,7 +102,7 @@ class Template
 		// If the parse is going to be used, best make sure it's loaded
 		if ($this->_parser_enabled === TRUE)
 		{
-			$this->_ci->load->library('parser');
+			class_exists('CI_Parser') OR $this->_ci->load->library('parser');
 		}
 
 		// Modular Separation / Modular Extensions has been detected
@@ -116,7 +116,7 @@ class Template
 		$this->_method 		= $this->_ci->router->fetch_method();
 
 		// Load user agent library if not loaded
-		$this->_ci->load->library('user_agent');
+		class_exists('CI_User_agent') OR $this->_ci->load->library('user_agent');
 
 		// We'll want to know this later
 		$this->_is_mobile	= $this->_ci->agent->is_mobile();
@@ -248,17 +248,17 @@ class Template
 
 		// Test to see if this file
 		$this->_body = $this->_find_view($view, array(), $this->_parser_body_enabled);
-
+		
 		// Want this file wrapped with a layout file?
 		if ($this->_layout)
 		{
 			// Added to $this->_data['template'] by refference
 			$template['body'] = $this->_body;
-
+			
 			// Find the main body and 3rd param means parse if its a theme view (only if parser is enabled)
 			$this->_body =  self::_load_view('layouts/'.$this->_layout, $this->_data, TRUE, self::_find_view_folder());
 		}
-
+		
 		// Want it returned or output to browser?
 		if ( ! $return)
 		{
@@ -575,23 +575,15 @@ class Template
 
 		foreach ($this->_theme_locations as $location)
 		{
-			if ($this->_is_mobile === TRUE AND is_dir($location.$theme.'/views/mobile/layouts/'))
-			{
-				foreach(glob($location.$theme . '/views/mobile/layouts/*.*') as $layout)
-				{
-					$layouts[] = pathinfo($layout, PATHINFO_BASENAME);
-				}
-				break;
-			}			
 			// Get special web layouts
-			elseif( is_dir($location.$theme.'/views/web/layouts/') )
+			if( is_dir($location.$theme.'/views/web/layouts/') )
 			{
 				foreach(glob($location.$theme . '/views/web/layouts/*.*') as $layout)
 				{
 					$layouts[] = pathinfo($layout, PATHINFO_BASENAME);
 				}
 				break;
-			}			
+			}
 
 			// So there are no web layouts, assume all layouts are web layouts
 			if(is_dir($location.$theme.'/views/layouts/'))
@@ -670,7 +662,7 @@ class Template
 	}
 
 	// A module view file can be overriden in a theme
-	public function _find_view($view, array $data, $parse_view = TRUE)
+	private function _find_view($view, array $data, $parse_view = TRUE)
 	{
 		// Only bother looking in themes if there is a theme
 		if ( ! empty($this->_theme))
@@ -696,7 +688,7 @@ class Template
 		return self::_load_view($view, $this->_data + $data, $parse_view);
 	}
 
-	public function _load_view($view, array $data, $parse_view = TRUE, $override_view_path = NULL)
+	private function _load_view($view, array $data, $parse_view = TRUE, $override_view_path = NULL)
 	{
 		// Sevear hackery to load views from custom places AND maintain compatibility with Modular Extensions
 		if ($override_view_path !== NULL)
@@ -704,8 +696,10 @@ class Template
 			if ($this->_parser_enabled === TRUE AND $parse_view === TRUE)
 			{
 				// Load content and pass through the parser
-				$content = $this->_ci->parser->parse_string(
-					$override_view_path.$view.self::_ext($view), $data, TRUE);
+				$content = $this->_ci->parser->parse_string($this->_ci->load->file(
+					$override_view_path.$view.self::_ext($view), 
+					TRUE
+				), $data);
 			}
 
 			else

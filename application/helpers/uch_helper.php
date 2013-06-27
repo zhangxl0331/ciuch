@@ -334,5 +334,44 @@ function checklogin()
 		showmessage('to_login', $CI->config->base_url().'ac/'.$CI->config_l->login_action);
 	}
 }
+
+function partial($view, $module='', $data=array())
+{
+	$CI = & get_instance();
+	$view = 'partials/'.$view;
+	if ($module)
+		{
+			if (file_exists($CI->template->get_theme_path().'modules/'.$module.'/views/'.$view.(pathinfo($view, PATHINFO_EXTENSION) ? '' : EXT)))
+			{
+				$path = $CI->template->get_theme_path().'modules/'.$module.'/views/'.$view.(pathinfo($view, PATHINFO_EXTENSION) ? '' : EXT);
+			}
+			else
+			{
+				foreach (Modules::$locations as $location => $offset)
+				{
+					if (file_exists($location.$module.'/views/'.$view.(pathinfo($view, PATHINFO_EXTENSION) ? '' : EXT)))
+					{
+						$path = $location.$module.'/views/'.$view.(pathinfo($view, PATHINFO_EXTENSION) ? '' : EXT);
+						break;
+					}
+				}
+			}
+			$string = $CI->load->_ci_load(array('_ci_path' => $path, '_ci_vars' => $data, '_ci_return' => TRUE));
+			return $CI->parser->parse_string($string, $data, TRUE);
+		}
+		else 
+		{
+			if (file_exists($CI->template->get_theme_path().'views/'.$view.(pathinfo($view, PATHINFO_EXTENSION) ? '' : EXT)))
+			{
+				$path = $CI->template->get_theme_path().'views/'.$view.(pathinfo($view, PATHINFO_EXTENSION) ? '' : EXT);
+			}
+			else 
+			{
+				$path	= APPPATH.'views/'.$view.(pathinfo($view, PATHINFO_EXTENSION) ? '' : EXT);
+			}
+			$string = $CI->load->_ci_load(array('_ci_path' => $path, '_ci_vars' => $data, '_ci_return' => TRUE));
+			return $CI->parser->parse_string($string, $data, TRUE);
+		}		
+}
 /* End of file captcha_helper.php */
 /* Location: ./system/heleprs/captcha_helper.php */

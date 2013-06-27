@@ -40,7 +40,17 @@ class Plugin_Theme extends Plugin
 		}
 		else 
 		{
-			return $this->template->_find_view($view, $data, TRUE);
+			if (file_exists($this->template->get_theme_path().'views/'.$view.(pathinfo($view, PATHINFO_EXTENSION) ? '' : EXT)))
+			{
+				$path = $this->template->get_theme_path().'views/'.$view.(pathinfo($view, PATHINFO_EXTENSION) ? '' : EXT);
+			}
+			else
+			{
+				$path	= APPPATH.'views/'.$view.(pathinfo($view, PATHINFO_EXTENSION) ? '' : EXT);
+			}
+			$string = $this->load->_ci_load(array('_ci_path' => $path, '_ci_vars' => $data, '_ci_return' => TRUE));
+			
+			return $this->parser->parse_string($string, $data, TRUE);
 		}		
 	}
 	

@@ -28,15 +28,12 @@ class Events_Usergroup
 		$this->CI->load->vars(array('usergroup'=>$usergroup));
 	}
 	
-	public function checkperm($data = array())
+	public function checkperm($type)
 	{
-		if(!$return = $this->CI->usergroup_m->checkperm((array)$data[0]))
+		if(!$return = $this->CI->usergroup_m->checkperm($type))
 		{
-			if(empty($data[1]))
-			{
-				$this->CI->load->vars(array('message'=>$this->CI->lang->line('no_privilege'), 'url_forword'=>'', 'second'=>1));
-				exit($this->CI->template->build('showmessage', array(), TRUE));
-			}
+			$this->CI->load->vars(array('message'=>$this->CI->lang->line('no_privilege'), 'url_forword'=>'', 'second'=>1));
+			exit($this->CI->template->build('showmessage', array(), TRUE));
 		}
 		return $return;
 	}
@@ -52,11 +49,7 @@ class Events_Usergroup
 	
 	public function ckseccode()
 	{
-		if($this->CI->usergroup_m->ckseccode($type))
-		{
-			$this->CI->load->vars(array('message'=>$this->CI->lang->line('incorrect_code'), 'url_forword'=>'', 'second'=>1));
-			exit($this->CI->template->build('showmessage', array(), TRUE));
-		}
+		$this->CI->usergroup_m->ckseccode();
 	}
      
 }
